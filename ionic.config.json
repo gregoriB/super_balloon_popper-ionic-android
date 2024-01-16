@@ -1,0 +1,7 @@
+{
+  "name": "super_balloon_popper",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
