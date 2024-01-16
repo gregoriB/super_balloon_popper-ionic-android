@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
-  appName: 'super_balloon_popper',
+  appName: 'mobile_app',
   webDir: 'www',
   server: {
     androidScheme: 'https',
