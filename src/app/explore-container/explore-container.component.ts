@@ -8,14 +8,8 @@ import { IonicModule } from '@ionic/angular';
   templateUrl: './explore-container.component.html',
   styleUrls: ['./explore-container.component.scss'],
   standalone: true,
-  imports: [
-    IonicModule,
-    FormsModule,
-    CommonModule,
-  ]
+  imports: [IonicModule, FormsModule, CommonModule],
 })
 export class ExploreContainerComponent {
-
   @Input() name?: string;
-
 }

@@ -8,14 +8,8 @@ import { IonicModule } from '@ionic/angular';
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
   standalone: true,
-  imports: [
-    IonicModule,
-    CommonModule,
-    FormsModule,
-  ]
+  imports: [IonicModule, CommonModule, FormsModule],
 })
 export class TabsPage {
-
   constructor() {}
-
 }

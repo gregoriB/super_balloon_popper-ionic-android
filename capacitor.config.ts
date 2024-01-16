@@ -5,8 +5,8 @@ const config: CapacitorConfig = {
   appName: 'super_balloon_popper',
   webDir: 'www',
   server: {
-    androidScheme: 'https'
-  }
+    androidScheme: 'https',
+  },
 };
 
 export default config;
