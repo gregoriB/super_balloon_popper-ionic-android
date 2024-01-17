@@ -1,3 +1,9 @@
-<p>
-  moving-object works!
-</p>
+@if (objectConfig.isActive) {
+    <div
+        class="moving-object"
+        [ngStyle]="styleConfig"
+        (click)="onClick($event)"
+    >
+        <app-balloon [config]="objectConfig" />
+    </div>
+}

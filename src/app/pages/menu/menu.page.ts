@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-menu',
-  templateUrl: './menu.page.html',
-  styleUrls: ['./menu.page.scss'],
-  standalone: true,
+    selector: 'app-menu',
+    templateUrl: './menu.page.html',
+    styleUrl: './menu.page.scss',
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [RouterModule],
 })
-export class MenuPage  implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {}
-
-}
+export class MenuPage {}

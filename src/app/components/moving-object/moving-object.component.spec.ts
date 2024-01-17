@@ -4,21 +4,21 @@ import { IonicModule } from '@ionic/angular';
 import { MovingObjectComponent } from './moving-object.component';
 
 describe('MovingObjectComponent', () => {
-  let component: MovingObjectComponent;
-  let fixture: ComponentFixture<MovingObjectComponent>;
+    let component: MovingObjectComponent;
+    let fixture: ComponentFixture<MovingObjectComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ MovingObjectComponent ],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations: [MovingObjectComponent],
+            imports: [IonicModule.forRoot()],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(MovingObjectComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+        fixture = TestBed.createComponent(MovingObjectComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    }));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

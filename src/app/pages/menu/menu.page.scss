@@ -1,0 +1,39 @@
+.menu {
+    background: aliceblue;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.start-button {
+    margin-bottom: 25%;
+    padding: 50px 25px;
+    background: deeppink;
+    border: none;
+    border-radius: 50px;
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    animation: pulse 3s infinite;
+}
+
+.title {
+    margin-top: 25%;
+    font-size: 3.5rem;
+    color: skyblue;
+    -webkit-text-fill-color: white;
+    -webkit-text-stroke: 1.5px deeppink;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1);
+    }
+
+    100% {
+        box-shadow: 0 0 0 15px rgba(0, 0, 0, 0.005);
+    }
+}

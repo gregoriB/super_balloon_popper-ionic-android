@@ -4,21 +4,21 @@ import { IonicModule } from '@ionic/angular';
 import { BalloonComponent } from './balloon.component';
 
 describe('BalloonComponent', () => {
-  let component: BalloonComponent;
-  let fixture: ComponentFixture<BalloonComponent>;
+    let component: BalloonComponent;
+    let fixture: ComponentFixture<BalloonComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ BalloonComponent ],
-      imports: [IonicModule.forRoot()]
-    }).compileComponents();
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations: [BalloonComponent],
+            imports: [IonicModule.forRoot()],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(BalloonComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+        fixture = TestBed.createComponent(BalloonComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    }));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

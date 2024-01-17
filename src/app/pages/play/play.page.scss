@@ -1,0 +1,16 @@
+.play {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: aliceblue;
+}
+
+.score {
+    margin: 2rem;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: deeppink;
+    font-weight: bold;
+    font-size: 1.5rem;
+}

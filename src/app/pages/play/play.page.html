@@ -1,3 +1,10 @@
-<p>
-  play works!
-</p>
+<div class="play">
+    @for (levelObject of levelObjects(); track levelObject.obj.id) {
+    <app-moving-object
+        [objectConfig]="levelObject.obj"
+        [movementConfig]="levelObject.movement"
+        (interactionEvent)="interactionEvent($event)"
+    ></app-moving-object>
+    }
+    <code class="score">SCORE: {{ score() }}</code>
+</div>
