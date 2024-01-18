@@ -3,7 +3,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     OnDestroy,
-    OnInit,
+    Signal,
+    effect,
     signal,
 } from '@angular/core';
 import { MovingObjectComponent } from 'src/app/components/moving-object/moving-object.component';
@@ -18,37 +19,6 @@ interface ObjectUpdate {
     basePoints: ObjectConfig['basePoints'];
     size: MovementConfig['size'];
 }
-
-const level1Objects: LevelObjectConfig[] = [
-    {
-        obj: {
-            name: 'balloon',
-            id: 1,
-            isActive: true,
-            style: { backgroundColor: 'red' },
-            basePoints: 10,
-        },
-        movement: {
-            size: 0.2,
-            step: 0.05,
-            startPos: null,
-        },
-    },
-    {
-        obj: {
-            name: 'balloon',
-            style: { backgroundColor: 'blue' },
-            id: 2,
-            isActive: true,
-            basePoints: 10,
-        },
-        movement: {
-            size: 0.05,
-            step: 0.1,
-            startPos: null,
-        },
-    },
-];
 
 const colors = [
     'aqua',
@@ -112,20 +82,32 @@ const startingSongIndex = Math.floor(Math.random() * bgm.length);
 export class PlayPage implements AfterViewInit, OnDestroy {
     levelObjects = signal<LevelObjectConfig[]>(generateNewItems(numBalloons));
     score = signal<number>(0);
-    songIndex = signal<number>(startingSongIndex);
-    song = signal<any>(new Audio());
+    songIndex = signal(0);
+    song!: HTMLAudioElement;
+
+    constructor() {
+        effect(this.playAudio.bind(this));
+    }
+
+    get isEveryObjectInactive() {
+        return this.levelObjects().every(
+            (lo: LevelObjectConfig) => !lo.obj.isActive,
+        );
+    }
 
     ngAfterViewInit() {
-        if (this.songIndex() === -1) return;
-        const track = new Audio(bgm[this.songIndex()]);
-        this.song.set(track);
-        this.song().play();
-        this.song().addEventListener('ended', this.incrementSong.bind(this));
+        this.songIndex.set(startingSongIndex);
+    }
+
+    playAudio() {
+        this.song = new Audio(bgm[this.songIndex()]);
+        this.song.play();
+        this.song.addEventListener('ended', this.incrementSong.bind(this));
     }
 
     ngOnDestroy() {
-        this.song().pause();
-        this.song().removeEventListener('ended', this.incrementSong.bind(this));
+        this.song.pause();
+        this.song.removeEventListener('ended', this.incrementSong.bind(this));
     }
 
     interactionEvent(event: ObjectUpdate) {
@@ -157,17 +139,11 @@ export class PlayPage implements AfterViewInit, OnDestroy {
             );
     }
 
-    get isEveryObjectInactive() {
-        return this.levelObjects().every(
-            (lo: LevelObjectConfig) => !lo.obj.isActive,
-        );
-    }
-
     incrementSong(): void {
         if (this.songIndex() >= bgm.length - 1) {
             this.songIndex.set(0);
         } else {
-            this.songIndex.update((i) => i + 1);
+            this.songIndex.update((i: number) => i + 1);
         }
     }
 }
