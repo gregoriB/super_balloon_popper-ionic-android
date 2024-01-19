@@ -11,7 +11,7 @@ export class BalloonComponent {
     @Input({ required: true }) config!: ObjectConfig;
 
     onClick() {
-        const popSound = new Audio('../../../assets/sounds/pop1.mp3');
+        const popSound = new Audio('../../../assets/sounds/pop.flac');
         popSound.play();
     }
 }

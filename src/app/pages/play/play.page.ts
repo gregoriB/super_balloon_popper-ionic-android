@@ -68,6 +68,7 @@ const numBalloons = 3;
 const JAZZ_TRIO = '../../../assets/sounds/jazz-trio.mp3';
 const JAZZ_HAPPY = '../../../assets/sounds/jazz-happy.mp3';
 const JAZZ_SWING = '../../../assets/sounds/swing.mp3';
+
 const bgm = [JAZZ_TRIO, JAZZ_HAPPY, JAZZ_SWING];
 const startingSongIndex = Math.floor(Math.random() * bgm.length);
 
@@ -97,6 +98,9 @@ export class PlayPage implements AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
         this.songIndex.set(startingSongIndex);
+        const inflateSound = new Audio('../../../assets/sounds/inflate.flac');
+        inflateSound.play();
+        inflateSound.playbackRate = 4;
     }
 
     playAudio() {

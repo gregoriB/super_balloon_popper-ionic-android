@@ -126,7 +126,6 @@ export class MovingObjectComponent implements OnInit, OnDestroy {
     }
 
     onClick(event: unknown) {
-        // this.debugLog(event);
         this.interactionEvent.emit({
             id: this.objectConfig.id,
             basePoints: this.objectConfig.basePoints,
