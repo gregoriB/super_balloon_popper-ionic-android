@@ -29,6 +29,7 @@ interface Style {
     imports: [BalloonComponent, CommonModule],
 })
 export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
+    @Input({ required: true }) bounds!: Bounds;
     @Input({ required: true }) movementConfig!: MovementConfig;
     @Input({ required: true }) objectConfig!: ObjectConfig;
     @Input({ required: true }) currentTouch!: [number, number];
@@ -36,21 +37,24 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
 
     objPos = signal<[number, number]>([0, 0]);
     objBearing = signal<[number, number]>([this.flipCoin(), this.flipCoin()]);
-    windowSize = signal<[number, number]>([
-        window.innerWidth,
-        window.innerHeight,
-    ]);
     movementInterval: number = 0;
     isDestroyed = false;
 
-    ngOnChanges(simpleChanges: SimpleChanges): void {
-        const currentValue = simpleChanges['currentTouch']?.currentValue;
-        const previousValue = simpleChanges['currentTouch']?.previousValue;
-        if (!previousValue || !currentValue) {
-            return;
+    ngOnChanges(changes: SimpleChanges): void {
+        const currentTouch = changes['currentTouch']?.currentValue;
+        const previousTouch = changes['currentTouch']?.previousValue;
+        if (previousTouch && currentTouch) {
+           this.handleCurrentTouchChange(previousTouch, currentTouch);
         }
-        const [oldX, oldY] = previousValue;
-        const [newX, newY] = currentValue;
+        const currentConfig = changes['objectConfig']?.currentValue;
+        if (currentConfig) {
+          this.handleActiveStateChange(currentConfig.isActive);
+        }
+    }
+
+    handleCurrentTouchChange(previousTouch: [number, number], currentTouch: [number, number]) {
+        const [oldX, oldY] = previousTouch;
+        const [newX, newY] = currentTouch;
         const isCurrentTouchUpdated = oldX !== newX || oldY !== newY;
         if (!isCurrentTouchUpdated) {
             return;
@@ -60,21 +64,37 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
         }
     }
 
+    handleActiveStateChange(isActive: boolean) {
+      if (isActive) {
+        return;
+      }
+      this.stopMovement();
+    }
+
     get random(): number {
         return Math.random();
     }
 
     get randomPos(): [number, number] {
-        return [
-            this.random * this.windowSize()[0] * this.movementConfig.size,
-            this.random * this.windowSize()[1] * this.movementConfig.size,
+        const pos: [number, number] = [
+            (this.random * this.bounds.width[1]),
+            (this.random * this.bounds.height[1]),
         ];
+
+        // should be negative
+        const diffX = pos[0] + this.size.width - this.bounds.width[1];
+        const diffY = pos[1] + this.size.height - this.bounds.height[1];
+        pos[0] = diffX >= 0 ? pos[0] - diffX : pos[0];
+        pos[1] = diffY >= 0 ? pos[1] - diffY : pos[1];
+
+        return pos;
     }
 
     get size(): { width: number; height: number } {
+        const multiplier = Math.min(this.bounds.width[1], this.bounds.height[1])
         return {
-            width: this.windowSize()[0] * this.movementConfig.size,
-            height: this.windowSize()[0] * this.movementConfig.size,
+            width: multiplier * this.movementConfig.size,
+            height: multiplier * this.movementConfig.size,
         };
     }
 
@@ -120,12 +140,12 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
 
     generateUpdatedBearing(): [number, number] {
         const [bX, bY] = this.objBearing();
-        const [windowW, windowH] = this.windowSize();
+        const { width: bWidth, height: bHeight } = this.bounds;
         const [pX, pY] = this.generateUpdatedPos(this.objPos(), [bX, bY]);
-        const { width, height } = this.size;
+        const { width: sWidth, height: wHeight } = this.size;
         return [
-            pX <= 1 || pX + width >= windowW ? bX * -1 : bX,
-            pY <= 1 || pY + height >= windowH ? bY * -1 : bY,
+            pX <= bWidth[0] || pX + sWidth >= bWidth[1] ? bX * -1 : bX,
+            pY <= bWidth[0] || pY + wHeight >= bHeight[1] ? bY * -1 : bY,
         ];
     }
 
@@ -143,6 +163,10 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnDestroy(): void {
+      this.stopMovement();
+    }
+
+    stopMovement(): void {
         clearInterval(this.movementInterval);
         this.movementInterval = 0;
     }
@@ -156,35 +180,5 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
             size: this.movementConfig.size,
             name: this.objectConfig.name,
         });
-    }
-
-    debugLog(event: unknown) {
-        const isClickEvent = (e: any): e is MouseEvent => {
-            return !isNaN(e?.y) && !isNaN(e?.x);
-        };
-        if (isClickEvent(event)) {
-            console.log(
-                'X: ',
-                Math.round(this.objPos()[0]) +
-                    ' to ' +
-                    (Math.round(this.objPos()[0]) + this.size.width),
-                event.x,
-            );
-
-            console.log(
-                'Y: ',
-                Math.round(this.objPos()[1]) +
-                    ' to ' +
-                    (Math.round(this.objPos()[1]) + this.size.width),
-                event.y,
-            );
-
-            console.log(
-                'width: ',
-                Math.round(
-                    this.objPos()[0] + this.size.width - this.objPos()[0],
-                ),
-            );
-        }
     }
 }

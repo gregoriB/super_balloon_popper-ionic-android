@@ -2,6 +2,7 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    HostListener,
     OnDestroy,
     effect,
     signal,
@@ -107,11 +108,34 @@ export class PlayPage implements AfterViewInit, OnDestroy {
     score = signal<number>(0);
     currentTouch = signal<[number, number]>([0, 0]);
     bgmSongIndex = signal<number>(0);
+    bounds = signal<Bounds>(this.windowBounds);
+
     bgmSong!: HTMLAudioElement;
     interactionSound!: HTMLAudioElement;
 
     constructor() {
         effect(this.playBgmAudio.bind(this));
+    }
+
+    @HostListener('window:resize')
+    handleScreenOrientationChange() {
+        this.setBounds();
+        this.initializeLevelObjects();
+    }
+
+    setBounds() {
+      this.bounds.set(this.windowBounds);
+    }
+
+    get windowBounds(): Bounds {
+      return {
+        width: [0, screen.availWidth],
+        height: [0, screen.availHeight]
+      }
+    }
+
+    initializeLevelObjects() {
+      this.levelObjects.set(generateNewItems(numBalloons));
     }
 
     isEveryObjectInactive(levelObjects: LevelObjectConfig[]) {
@@ -121,6 +145,9 @@ export class PlayPage implements AfterViewInit, OnDestroy {
     ngAfterViewInit() {
         this.bgmSongIndex.set(startingBgmSongIndex);
         this.playInflateAudio();
+        screen.orientation.addEventListener('change', () => {
+
+        });
     }
 
     ngOnDestroy() {
@@ -131,12 +158,12 @@ export class PlayPage implements AfterViewInit, OnDestroy {
         );
     }
 
-    touchPage(event: any) {
+    touchPage(event: TouchEvent) {
         const { pageX, pageY } = event.changedTouches[0];
         this.currentTouch.set([pageX, pageY]);
     }
 
-    clickPage(event: any) {
+    clickPage(event: MouseEvent) {
         this.currentTouch.set([event.x, event.y]);
     }
 

@@ -13,3 +13,9 @@ declare interface ObjectConfig {
     };
     basePoints: number;
 }
+
+interface Bounds {
+  width: [number, number];
+  height: [number, number];
+}
+
