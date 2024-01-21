@@ -1,4 +1,21 @@
 .moving-object {
     position: absolute;
     size: 100%;
+    transition-duration: 100ms;
+    transition-property: transform;
+    transform: scale(0.5);
+}
+
+.inactive {
+    opacity: 0;
+    transition-duration: 70ms, 0ms;
+    transition-delay: 0ms, 60ms;
+    transition-property: transform, opacity;
+    transform: scale(1.5);
+}
+
+.active {
+    transition-duration: 100ms;
+    transition-property: transform;
+    transform: scale(1);
 }

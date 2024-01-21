@@ -65,8 +65,9 @@ const bgmArr = [
 const startingBgmSongIndex = Math.floor(Math.random() * bgmArr.length);
 
 function generateRandomBalloon(colors: string[]): LevelObjectConfig {
-    const [minSize, maxSize] = [0.4, 1];
-    const [minStep, maxStep] = [0.03, 0.08];
+    const [minSize, maxSize] = [0.4, 0.8];
+    // const [minStep, maxStep] = [0.03, 0.08];
+    const [minStep, maxStep] = [0.1, 0.6];
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
     return {
@@ -165,12 +166,20 @@ export class PlayPage implements AfterViewInit, OnDestroy {
     interactionEvent(objConfig: ObjectUpdate) {
         const updatedObjects = this.createUpdatedLevelObjects(objConfig);
         if (this.isEveryObjectInactive(updatedObjects)) {
-            this.levelObjects.set(generateNewItems(numBalloons));
+            this.incrementLevel(updatedObjects);
         } else {
             this.levelObjects.set(updatedObjects);
         }
         this.playInteractionAudio(objConfig.name);
         this.updateScore(objConfig);
+    }
+
+    incrementLevel(levelObjects: LevelObjectConfig[]) {
+        const newLevelObjects = generateNewItems(numBalloons);
+        if (levelObjects.length >= 20) {
+            this.levelObjects.set(newLevelObjects);
+        }
+        this.levelObjects.set([...levelObjects, ...newLevelObjects]);
     }
 
     updateScore(event: ObjectUpdate) {

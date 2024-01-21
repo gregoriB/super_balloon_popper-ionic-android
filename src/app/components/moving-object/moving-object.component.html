@@ -1,5 +1,8 @@
-@if (objectConfig.isActive) {
-    <div class="moving-object" [ngStyle]="styleConfig">
-        <app-balloon [config]="objectConfig" />
-    </div>
-}
+<div
+    [class.inactive]="!objectConfig.isActive"
+    [class.active]="objectConfig.isActive"
+    class="moving-object"
+    [ngStyle]="styleConfig"
+>
+    <app-balloon [config]="objectConfig" />
+</div>

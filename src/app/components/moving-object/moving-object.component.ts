@@ -18,7 +18,6 @@ interface Style {
     top: string;
     width: string;
     height: string;
-    [key: string]: string;
 }
 
 @Component({
