@@ -3,7 +3,7 @@ import { AppComponent } from './app.component';
 
 export const routes: Routes = [
     {
-        path: '',
+        path: 'menu',
         loadComponent: () =>
             import('./pages/menu/menu.page').then((m) => m.MenuPage),
     },

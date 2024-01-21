@@ -1,9 +1,5 @@
 @if (objectConfig.isActive) {
-    <div
-        class="moving-object"
-        [ngStyle]="styleConfig"
-        (click)="onClick($event)"
-    >
+    <div class="moving-object" [ngStyle]="styleConfig">
         <app-balloon [config]="objectConfig" />
     </div>
 }

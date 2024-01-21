@@ -9,9 +9,4 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 })
 export class BalloonComponent {
     @Input({ required: true }) config!: ObjectConfig;
-
-    onClick() {
-        const popSound = new Audio('../../../assets/sounds/pop.flac');
-        popSound.play();
-    }
 }

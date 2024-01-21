@@ -3,10 +3,11 @@ import {
     Component,
     EventEmitter,
     Input,
+    OnChanges,
     OnDestroy,
     OnInit,
     Output,
-    Signal,
+    SimpleChanges,
     signal,
 } from '@angular/core';
 import { BalloonComponent } from '../balloon/balloon.component';
@@ -28,9 +29,10 @@ interface Style {
     standalone: true,
     imports: [BalloonComponent, CommonModule],
 })
-export class MovingObjectComponent implements OnInit, OnDestroy {
+export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
     @Input({ required: true }) movementConfig!: MovementConfig;
     @Input({ required: true }) objectConfig!: ObjectConfig;
+    @Input({ required: true }) currentTouch!: [number, number];
     @Output() interactionEvent = new EventEmitter();
 
     objPos = signal<[number, number]>([0, 0]);
@@ -40,6 +42,24 @@ export class MovingObjectComponent implements OnInit, OnDestroy {
         window.innerHeight,
     ]);
     movementInterval: number = 0;
+    isDestroyed = false;
+
+    ngOnChanges(simpleChanges: SimpleChanges): void {
+        const currentValue = simpleChanges['currentTouch']?.currentValue;
+        const previousValue = simpleChanges['currentTouch']?.previousValue;
+        if (!previousValue || !currentValue) {
+            return;
+        }
+        const [oldX, oldY] = previousValue;
+        const [newX, newY] = currentValue;
+        const isCurrentTouchUpdated = oldX !== newX || oldY !== newY;
+        if (!isCurrentTouchUpdated) {
+            return;
+        }
+        if (this.isTouchInObject) {
+            this.onInteract();
+        }
+    }
 
     get random(): number {
         return Math.random();
@@ -70,40 +90,44 @@ export class MovingObjectComponent implements OnInit, OnDestroy {
         };
     }
 
+    get isTouchInObject(): boolean {
+        const { width: objectW, height: objectH } = this.size;
+        const [cX, cY] = this.currentTouch;
+        const [pX, pY] = this.objPos();
+        const [eX, eY] = [pX + objectW, pY + objectH];
+        const isX = cX > pX && cX < eX;
+        const isY = cY > pY && cY < eY;
+        return isX && isY;
+    }
+
     generateRandomNumber(min: number, max: number): number {
         return this.random * (max - min) + min;
     }
 
     flipCoin(): number {
-        return this.random > 0.5
-            ? this.generateRandomNumber(0.1, 0.5)
-            : -this.generateRandomNumber(0.1, 0.5);
+        // Use Math.random here since we always need it to return < 1
+        const multiplier = Math.round(Math.random()) || -1;
+        return this.generateRandomNumber(0.1, 0.5) * multiplier;
     }
 
     generateUpdatedPos(pos: number[], bearing: number[]): [number, number] {
+        const [posX, posY] = pos;
+        const [bearingX, bearingY] = bearing;
         const step = this.movementConfig.step;
-        const [pX, pY] = pos;
-        const [bX, bY] = bearing;
-        const sX = bX < 0 ? -step : step;
-        const sY = bY < 0 ? -step : step;
-        return [pX + sX, pY + sY];
+        const stepX = bearingX < 0 ? -step : step;
+        const stepY = bearingY < 0 ? -step : step;
+        return [posX + stepX, posY + stepY];
     }
 
     generateUpdatedBearing(): [number, number] {
-        const pos = this.objPos();
-        const bearing = this.objBearing();
-        let [wX, wY] = this.windowSize();
-        let newBearingX = bearing[0];
-        let newBearingY = bearing[1];
-        const [pX, pY] = this.generateUpdatedPos(pos, bearing);
+        const [bX, bY] = this.objBearing();
+        const [windowW, windowH] = this.windowSize();
+        const [pX, pY] = this.generateUpdatedPos(this.objPos(), [bX, bY]);
         const { width, height } = this.size;
-        if (pX <= 1 || pX + width >= wX) {
-            newBearingX = newBearingX * -1;
-        }
-        if (pY <= 1 || pY + height >= wY) {
-            newBearingY = newBearingY * -1;
-        }
-        return [newBearingX, newBearingY];
+        return [
+            pX <= 1 || pX + width >= windowW ? bX * -1 : bX,
+            pY <= 1 || pY + height >= windowH ? bY * -1 : bY,
+        ];
     }
 
     moveObject(): void {
@@ -113,23 +137,25 @@ export class MovingObjectComponent implements OnInit, OnDestroy {
         this.objBearing.set(newBearing);
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         const startPos = this.movementConfig.startPos || this.randomPos;
         this.objPos = signal(startPos);
         this.movementInterval = window.setInterval(() => this.moveObject(), 1);
     }
 
-    ngOnDestroy() {
-        console.log('destroyed', this.objectConfig.id);
+    ngOnDestroy(): void {
         clearInterval(this.movementInterval);
         this.movementInterval = 0;
     }
 
-    onClick(event: unknown) {
+    onInteract(): void {
+        if (this.isDestroyed) return;
+        this.isDestroyed = true;
         this.interactionEvent.emit({
             id: this.objectConfig.id,
             basePoints: this.objectConfig.basePoints,
             size: this.movementConfig.size,
+            name: this.objectConfig.name,
         });
     }
 

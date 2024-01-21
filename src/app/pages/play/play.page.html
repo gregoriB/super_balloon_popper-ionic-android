@@ -1,9 +1,16 @@
-<div class="play">
+<div
+    class="play"
+    (touchstart)="touchPage($event)"
+    (touchend)="touchPage($event)"
+    (touchmove)="touchPage($event)"
+    (click)="clickPage($event)"
+>
     @for (levelObject of levelObjects(); track levelObject.obj.id) {
     <app-moving-object
         [objectConfig]="levelObject.obj"
         [movementConfig]="levelObject.movement"
         (interactionEvent)="interactionEvent($event)"
+        [currentTouch]="currentTouch()"
     ></app-moving-object>
     }
     <code class="score">SCORE: {{ score() }}</code>
