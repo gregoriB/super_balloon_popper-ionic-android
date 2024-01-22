@@ -98,8 +98,8 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
     get size(): { width: number; height: number } {
         const multiplier = Math.min(this.bounds.width[1], this.bounds.height[1])
         return {
-            width: multiplier * this.movementConfig.size,
-            height: multiplier * this.movementConfig.size,
+            width: multiplier * this.movementConfig.size.width,
+            height: multiplier * this.movementConfig.size.height,
         };
     }
 

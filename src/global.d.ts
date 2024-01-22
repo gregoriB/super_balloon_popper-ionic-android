@@ -1,6 +1,6 @@
 declare interface MovementConfig {
     index: number;
-    size: number;
+    size: { width: number, height: number };
     step: number;
     startPos: [number, number] | null;
 }

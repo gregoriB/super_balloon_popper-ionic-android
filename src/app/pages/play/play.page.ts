@@ -56,9 +56,10 @@ const bgmArr = [
 const startingBgmSongIndex = Math.floor(Math.random() * bgmArr.length);
 
 function generateRandomBalloon(index: number): LevelObjectConfig {
-    const [minSize, maxSize] = [0.8, 1.1];
+    const [minSize, maxSize] = [0.8, 1];
     // const [minSize, maxSize] = [0.3, .5];;
     const [minStep, maxStep] = [0.1, 0.6];
+    const size = Math.max(Math.random() * maxSize, minSize);
 
     return {
         attrs: {
@@ -69,7 +70,8 @@ function generateRandomBalloon(index: number): LevelObjectConfig {
         },
         movement: {
             index,
-            size: Math.max(Math.random() * maxSize, minSize),
+            // size: Math.max(Math.random() * maxSize, minSize),
+            size: { width: size, height: size + .2 },
             step: Math.max(Math.random() * maxStep, minStep),
             startPos: null,
         },
@@ -215,7 +217,7 @@ export class PlayPage implements AfterViewInit, OnDestroy {
 
     updateScore(event: ObjectUpdate) {
         this.score.update((currentScore: number) => {
-            return Math.round(currentScore + event.basePoints / event.size);
+            return Math.round(currentScore + event.basePoints / event.size.width);
         });
     }
 
