@@ -4,22 +4,11 @@ import {
     Component,
     HostListener,
     OnDestroy,
+    ViewChild,
     effect,
     signal,
 } from '@angular/core';
 import { MovingObjectComponent } from 'src/app/components/moving-object/moving-object.component';
-
-interface LevelObjectConfig {
-    obj: ObjectConfig;
-    movement: MovementConfig;
-}
-
-interface ObjectUpdate {
-    id: ObjectConfig['id'];
-    basePoints: ObjectConfig['basePoints'];
-    size: MovementConfig['size'];
-    name: string;
-}
 
 const colors = [
     'aqua',
@@ -40,6 +29,7 @@ const colors = [
 enum InteractableObject {
     BALLOON = 'balloon',
 }
+
 
 const interactionSounds: { [key: string]: string } = {
     [InteractableObject.BALLOON]: '../../../assets/sounds/pop.flac',
@@ -65,23 +55,20 @@ const bgmArr = [
 
 const startingBgmSongIndex = Math.floor(Math.random() * bgmArr.length);
 
-function generateRandomBalloon(colors: string[]): LevelObjectConfig {
+function generateRandomBalloon(index: number): LevelObjectConfig {
     const [minSize, maxSize] = [0.8, 1.1];
-    // const [minStep, maxStep] = [0.03, 0.08];
+    // const [minSize, maxSize] = [0.3, .5];;
     const [minStep, maxStep] = [0.1, 0.6];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
     return {
-        obj: {
+        attrs: {
             id: window.crypto.getRandomValues(new Uint8Array(10)).join(''),
             name: InteractableObject.BALLOON,
-            style: {
-                backgroundColor: randomColor,
-            },
             isActive: true,
             basePoints: 10,
         },
         movement: {
+            index,
             size: Math.max(Math.random() * maxSize, minSize),
             step: Math.max(Math.random() * maxStep, minStep),
             startPos: null,
@@ -90,7 +77,7 @@ function generateRandomBalloon(colors: string[]): LevelObjectConfig {
 }
 
 const generateNewItems = (count = 5) => {
-    return new Array(count).fill(0).map(() => generateRandomBalloon(colors));
+    return new Array(count).fill(0).map((_, i: number) => generateRandomBalloon(i));
 };
 
 const numBalloons = 2;
@@ -115,6 +102,7 @@ export class PlayPage implements AfterViewInit, OnDestroy {
     interactionSound!: HTMLAudioElement;
 
     constructor() {
+        effect(() => console.log(this.isThrottled()))
         effect(this.playBgmAudio.bind(this));
     }
 
@@ -140,7 +128,7 @@ export class PlayPage implements AfterViewInit, OnDestroy {
     }
 
     isEveryObjectInactive(levelObjects: LevelObjectConfig[]) {
-        return levelObjects.every((lo) => !lo.obj.isActive);
+        return levelObjects.every((lo) => !lo.attrs.isActive);
     }
 
     ngAfterViewInit() {
@@ -187,18 +175,34 @@ export class PlayPage implements AfterViewInit, OnDestroy {
         inflateSound.playbackRate = 4;
     }
 
+    batchedInteractions: ObjectUpdate[] = [];
+
     interactionEvent(objConfig: ObjectUpdate) {
         if (this.isThrottled()) return;
-        this.isThrottled.set(true)
-        window.setTimeout(() => (this.isThrottled.set(false)), 200)
-        const updatedObjects = this.createUpdatedLevelObjects(objConfig);
-        if (this.isEveryObjectInactive(updatedObjects)) {
-            this.incrementLevel(updatedObjects);
-        } else {
-            this.levelObjects.set(updatedObjects);
-        }
-        this.playInteractionAudio(objConfig.name);
-        this.updateScore(objConfig);
+        this.batchedInteractions.push(objConfig);
+        this.disableReenableInteractions();
+        window.setTimeout(this.updateObjects.bind(this), 10);
+    }
+
+    disableReenableInteractions() {
+        window.setTimeout(() => {
+          this.isThrottled.set(true)
+          window.setTimeout(() => (this.isThrottled.set(false)), 200)
+        }, 10);
+    }
+
+    updateObjects() {
+      if (!this.batchedInteractions.length) return;
+      const objConfig = this.batchedInteractions[this.batchedInteractions.length - 1];
+      const updatedObjects = this.createUpdatedLevelObjects(objConfig);
+      if (this.isEveryObjectInactive(updatedObjects)) {
+          this.incrementLevel(updatedObjects);
+      } else {
+          this.levelObjects.set(updatedObjects);
+      }
+      this.playInteractionAudio(objConfig.name);
+      this.updateScore(objConfig);
+      this.batchedInteractions = []
     }
 
     incrementLevel(levelObjects: LevelObjectConfig[]) {
@@ -216,12 +220,12 @@ export class PlayPage implements AfterViewInit, OnDestroy {
     }
 
     createUpdatedLevelObjects(
-        loConfig: Partial<ObjectConfig>,
+        loConfig: Partial<AttrConfig>,
     ): LevelObjectConfig[] {
         return structuredClone(this.levelObjects()).reduce(
             (acc: LevelObjectConfig[], curr: LevelObjectConfig) => {
-                if (curr.obj.id === loConfig.id) {
-                    curr.obj.isActive = false;
+                if (curr.attrs.id === loConfig.id) {
+                    curr.attrs.isActive = false;
                 }
                 return [...acc, curr];
             },

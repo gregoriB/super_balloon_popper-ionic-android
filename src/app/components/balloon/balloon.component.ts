@@ -10,7 +10,7 @@ const colors = ['blue', 'red', 'green', 'yellow', 'orange', 'purple', 'pink'] as
     standalone: true,
 })
 export class BalloonComponent implements AfterViewInit, OnChanges {
-    @Input({ required: true }) config!: ObjectConfig;
+    @Input({ required: true }) config!: AttrConfig;
 
     selectedColor = colors[Math.floor(Math.random() * colors.length)];
     saturation = Math.floor(Math.random() * 50) + 100;
@@ -37,7 +37,7 @@ export class BalloonComponent implements AfterViewInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-      const currentConfig = changes['config']?.currentValue as ObjectConfig;
+      const currentConfig = changes['config']?.currentValue as AttrConfig;
       if (!currentConfig.isActive) {
         window.clearTimeout(this.interval);
         this.interval = 0;

@@ -5,11 +5,11 @@
     (touchmove)="touchPage($event)"
     (click)="clickPage($event)"
 >
-    @for (levelObject of levelObjects(); track levelObject.obj.id) {
+    @for (levelObject of levelObjects(); track levelObject.attrs.id) {
     <app-moving-object
         [isThrottled]="isThrottled()"
         [bounds]="bounds()"
-        [objectConfig]="levelObject.obj"
+        [objectConfig]="levelObject.attrs"
         [movementConfig]="levelObject.movement"
         (interactionEvent)="interactionEvent($event)"
         [currentTouch]="currentTouch()"

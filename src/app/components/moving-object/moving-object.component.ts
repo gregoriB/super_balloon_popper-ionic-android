@@ -32,14 +32,13 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
     @Input({ required: true }) isThrottled!: boolean;
     @Input({ required: true }) bounds!: Bounds;
     @Input({ required: true }) movementConfig!: MovementConfig;
-    @Input({ required: true }) objectConfig!: ObjectConfig;
+    @Input({ required: true }) objectConfig!: AttrConfig;
     @Input({ required: true }) currentTouch!: [number, number];
     @Output() interactionEvent = new EventEmitter();
 
     objPos = signal<[number, number]>([0, 0]);
     objBearing = signal<[number, number]>([this.flipCoin(), this.flipCoin()]);
     movementInterval: number = 0;
-    isDestroyed = false;
 
     ngOnChanges(changes: SimpleChanges): void {
         const currentTouch = changes['currentTouch']?.currentValue;
@@ -181,13 +180,13 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     onInteract(): void {
-        if (this.isDestroyed) return;
-        this.isDestroyed = true;
+        if (!this.objectConfig.isActive) return;
         this.interactionEvent.emit({
             id: this.objectConfig.id,
             basePoints: this.objectConfig.basePoints,
             size: this.movementConfig.size,
             name: this.objectConfig.name,
+            index: this.movementConfig.index
         });
     }
 }

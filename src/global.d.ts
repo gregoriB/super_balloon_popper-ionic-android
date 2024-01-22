@@ -1,21 +1,36 @@
 declare interface MovementConfig {
+    index: number;
     size: number;
     step: number;
     startPos: [number, number] | null;
 }
 
-declare interface ObjectConfig {
+declare interface AttrConfig {
     name: string;
     id: string | number;
     isActive: boolean;
-    style?: {
-        backgroundColor: string;
-    };
     basePoints: number;
 }
 
-interface Bounds {
+declare interface Bounds {
   width: [number, number];
   height: [number, number];
+}
+
+declare interface LevelObjectConfig {
+    attrs: AttrConfig;
+    movement: MovementConfig;
+}
+
+declare interface ObjectUpdate {
+    id: AttrConfig['id'];
+    basePoints: AttrConfig['basePoints'];
+    size: MovementConfig['size'];
+    name: string;
+    index: number;
+}
+
+declare enum InteractableObject {
+    BALLOON = 'balloon',
 }
 
