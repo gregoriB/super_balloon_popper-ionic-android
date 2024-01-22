@@ -1,6 +1,6 @@
 declare interface MovementConfig {
     index: number;
-    size: { width: number, height: number };
+    size: { width: number; height: number };
     step: number;
     startPos: [number, number] | null;
 }
@@ -13,8 +13,8 @@ declare interface AttrConfig {
 }
 
 declare interface Bounds {
-  width: [number, number];
-  height: [number, number];
+    width: [number, number];
+    height: [number, number];
 }
 
 declare interface LevelObjectConfig {
@@ -33,4 +33,3 @@ declare interface ObjectUpdate {
 declare enum InteractableObject {
     BALLOON = 'balloon',
 }
-

@@ -1,18 +1,18 @@
 @mixin random-movement {
-  $multiplier: -1;
-  @if (random(2)) == 1 {
-    $multiplier: 1;
-  }
-  $random-number: $multiplier * (random(20) + 10);
-  @keyframes moving-rotate {
-    33% {
-      transform: rotate($random-number + deg);
+    $multiplier: -1;
+    @if (random(2)) == 1 {
+        $multiplier: 1;
     }
-    66% {
-      transform: rotate($random-number * -1 + deg);
+    $random-number: $multiplier * (random(20) + 10);
+    @keyframes moving-rotate {
+        33% {
+            transform: rotate($random-number + deg);
+        }
+        66% {
+            transform: rotate($random-number * -1 + deg);
+        }
     }
-  }
-  animation: moving-rotate (random(10) + s) linear infinite;
+    animation: moving-rotate (random(10) + s) linear infinite;
 }
 
 .balloon {

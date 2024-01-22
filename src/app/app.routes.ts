@@ -12,4 +12,8 @@ export const routes: Routes = [
         loadComponent: () =>
             import('./pages/play/play.page').then((m) => m.PlayPage),
     },
+    {
+        path: '**',
+        redirectTo: 'play',
+    },
 ];

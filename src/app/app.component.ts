@@ -1,12 +1,10 @@
-import {
-    AndroidFullScreen,
-    AndroidSystemUiFlags,
-} from '@awesome-cordova-plugins/android-full-screen/ngx';
+import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen/ngx';
 import {
     ChangeDetectionStrategy,
     Component,
     OnInit,
     inject,
+    signal,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import {
@@ -35,6 +33,11 @@ export class AppComponent implements OnInit, ViewDidEnter {
 
     async ngOnInit() {
         await this.platform.ready();
+        this.platform.backButton.subscribe(() => {
+            const navigator = window.navigator as any;
+            const app: any = navigator['app'];
+            app.exitApp();
+        });
         this.enterFullScreenMode();
         this.router.navigate(['menu']);
     }
@@ -62,13 +65,11 @@ export class AppComponent implements OnInit, ViewDidEnter {
     }
 
     async setAndroidFullScreen() {
-        await this.androidFullScreen.isImmersiveModeSupported();
-        this.androidFullScreen.setSystemUiVisibility(
-            AndroidSystemUiFlags.HideNavigation |
-                AndroidSystemUiFlags.Fullscreen |
-                AndroidSystemUiFlags.ImmersiveSticky |
-                AndroidSystemUiFlags.Immersive,
-        );
+        const isImmersiveModeSupported =
+            await this.androidFullScreen.isImmersiveModeSupported();
+        if (isImmersiveModeSupported) {
+            this.androidFullScreen.immersiveMode();
+        }
     }
 
     setIOSFullScreen(): void {

@@ -30,7 +30,6 @@ enum InteractableObject {
     BALLOON = 'balloon',
 }
 
-
 const interactionSounds: { [key: string]: string } = {
     [InteractableObject.BALLOON]: '../../../assets/sounds/pop.flac',
 };
@@ -71,7 +70,7 @@ function generateRandomBalloon(index: number): LevelObjectConfig {
         movement: {
             index,
             // size: Math.max(Math.random() * maxSize, minSize),
-            size: { width: size, height: size + .2 },
+            size: { width: size, height: size + 0.2 },
             step: Math.max(Math.random() * maxStep, minStep),
             startPos: null,
         },
@@ -79,7 +78,9 @@ function generateRandomBalloon(index: number): LevelObjectConfig {
 }
 
 const generateNewItems = (count = 5) => {
-    return new Array(count).fill(0).map((_, i: number) => generateRandomBalloon(i));
+    return new Array(count)
+        .fill(0)
+        .map((_, i: number) => generateRandomBalloon(i));
 };
 
 const numBalloons = 2;
@@ -104,7 +105,6 @@ export class PlayPage implements AfterViewInit, OnDestroy {
     interactionSound!: HTMLAudioElement;
 
     constructor() {
-        effect(() => console.log(this.isThrottled()))
         effect(this.playBgmAudio.bind(this));
     }
 
@@ -115,18 +115,18 @@ export class PlayPage implements AfterViewInit, OnDestroy {
     }
 
     setBounds() {
-      this.bounds.set(this.windowBounds);
+        this.bounds.set(this.windowBounds);
     }
 
     get windowBounds(): Bounds {
-      return {
-        width: [0, screen.availWidth],
-        height: [0, screen.availHeight]
-      }
+        return {
+            width: [0, screen.availWidth],
+            height: [0, screen.availHeight],
+        };
     }
 
     initializeLevelObjects() {
-      this.levelObjects.set(generateNewItems(numBalloons));
+        this.levelObjects.set(generateNewItems(numBalloons));
     }
 
     isEveryObjectInactive(levelObjects: LevelObjectConfig[]) {
@@ -188,23 +188,24 @@ export class PlayPage implements AfterViewInit, OnDestroy {
 
     disableReenableInteractions() {
         window.setTimeout(() => {
-          this.isThrottled.set(true)
-          window.setTimeout(() => (this.isThrottled.set(false)), 200)
+            this.isThrottled.set(true);
+            window.setTimeout(() => this.isThrottled.set(false), 200);
         }, 10);
     }
 
     updateObjects() {
-      if (!this.batchedInteractions.length) return;
-      const objConfig = this.batchedInteractions[this.batchedInteractions.length - 1];
-      const updatedObjects = this.createUpdatedLevelObjects(objConfig);
-      if (this.isEveryObjectInactive(updatedObjects)) {
-          this.incrementLevel(updatedObjects);
-      } else {
-          this.levelObjects.set(updatedObjects);
-      }
-      this.playInteractionAudio(objConfig.name);
-      this.updateScore(objConfig);
-      this.batchedInteractions = []
+        if (!this.batchedInteractions.length) return;
+        const objConfig =
+            this.batchedInteractions[this.batchedInteractions.length - 1];
+        const updatedObjects = this.createUpdatedLevelObjects(objConfig);
+        if (this.isEveryObjectInactive(updatedObjects)) {
+            this.incrementLevel(updatedObjects);
+        } else {
+            this.levelObjects.set(updatedObjects);
+        }
+        this.playInteractionAudio(objConfig.name);
+        this.updateScore(objConfig);
+        this.batchedInteractions = [];
     }
 
     incrementLevel(levelObjects: LevelObjectConfig[]) {
@@ -217,7 +218,9 @@ export class PlayPage implements AfterViewInit, OnDestroy {
 
     updateScore(event: ObjectUpdate) {
         this.score.update((currentScore: number) => {
-            return Math.round(currentScore + event.basePoints / event.size.width);
+            return Math.round(
+                currentScore + event.basePoints / event.size.width,
+            );
         });
     }
 

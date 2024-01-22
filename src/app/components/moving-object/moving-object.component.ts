@@ -44,20 +44,18 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
         const currentTouch = changes['currentTouch']?.currentValue;
         const previousTouch = changes['currentTouch']?.previousValue;
         if (previousTouch && currentTouch) {
-           this.handleCurrentTouchChange(previousTouch, currentTouch);
+            this.handleCurrentTouchChange(previousTouch, currentTouch);
         }
-        // const currentIsThrottled = changes['isThrottled']?.currentValue;
-        // const previousIsThrottled = changes['isThrottled']?.previousValue;
-        // if (!currentIsThrottled && previousIsThrottled && this.isTouchInObject) {
-        //   this.onInteract();
-        // }
         const currentConfig = changes['objectConfig']?.currentValue;
         if (currentConfig) {
-          this.handleActiveStateChange(currentConfig.isActive);
+            this.handleActiveStateChange(currentConfig.isActive);
         }
     }
 
-    handleCurrentTouchChange(previousTouch: [number, number], currentTouch: [number, number]) {
+    handleCurrentTouchChange(
+        previousTouch: [number, number],
+        currentTouch: [number, number],
+    ) {
         const [oldX, oldY] = previousTouch;
         const [newX, newY] = currentTouch;
         const isCurrentTouchUpdated = oldX !== newX || oldY !== newY;
@@ -70,10 +68,10 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     handleActiveStateChange(isActive: boolean) {
-      if (isActive) {
-        return;
-      }
-      this.stopMovement();
+        if (isActive) {
+            return;
+        }
+        this.stopMovement();
     }
 
     get random(): number {
@@ -82,8 +80,8 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
 
     get randomPos(): [number, number] {
         const pos: [number, number] = [
-            (this.random * this.bounds.width[1]),
-            (this.random * this.bounds.height[1]),
+            this.random * this.bounds.width[1],
+            this.random * this.bounds.height[1],
         ];
 
         // should be negative
@@ -96,7 +94,10 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     get size(): { width: number; height: number } {
-        const multiplier = Math.min(this.bounds.width[1], this.bounds.height[1])
+        const multiplier = Math.min(
+            this.bounds.width[1],
+            this.bounds.height[1],
+        );
         return {
             width: multiplier * this.movementConfig.size.width,
             height: multiplier * this.movementConfig.size.height,
@@ -116,7 +117,7 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
 
     get isTouchInObject(): boolean {
         if (this.isThrottled) {
-          return false;
+            return false;
         }
         const { width: objectW, height: objectH } = this.size;
         const [cX, cY] = this.currentTouch;
@@ -171,7 +172,7 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnDestroy(): void {
-      this.stopMovement();
+        this.stopMovement();
     }
 
     stopMovement(): void {
@@ -186,7 +187,7 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
             basePoints: this.objectConfig.basePoints,
             size: this.movementConfig.size,
             name: this.objectConfig.name,
-            index: this.movementConfig.index
+            index: this.movementConfig.index,
         });
     }
 }

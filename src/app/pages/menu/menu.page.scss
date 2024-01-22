@@ -19,8 +19,8 @@
     left: 0;
     height: 100vh;
     width: 100vw;
-    background-color: rgb(118,235,255);
-    background-image: url('../../../assets/images/balloon_background.png');
+    background-color: rgb(118, 235, 255);
+    background-image: url("../../../assets/images/balloon_background.png");
     background-position: 70%;
     background-repeat: no-repeat;
     background-size: cover;
@@ -29,18 +29,18 @@
 }
 
 .start-button {
-    letter-spacing: .08rem;
+    letter-spacing: 0.08rem;
     height: 30vh;
     width: 30vh;
-    font-family: 'Valoon';
+    font-family: "Valoon";
     font-size: 3.5vmax;
-    background: rgba(255,20,147, 0);
+    background: rgba(255, 20, 147, 0);
     border: none;
     border-radius: 100%;
     color: white;
     -webkit-text-fill-color: white;
     -webkit-text-stroke: 1.5px white;
-    background-image: url('../../../assets/images/pink_menu@2x.svg');
+    background-image: url("../../../assets/images/pink_menu@2x.svg");
     background-position: top;
     background-repeat: no-repeat;
     background-size: contain;
@@ -52,12 +52,12 @@
 
 .start-button.inactive {
     opacity: 0;
-    transition-delay: 900ms;
+    transition-delay: 850ms;
     transition-property: opacity;
     color: transparent;
     -webkit-text-fill-color: transparent;
     -webkit-text-stroke: 1.45px transparent;
-    animation: float 800ms linear;
+    animation: float 900ms linear;
     animation-iteration-count: 1;
 }
 
@@ -65,37 +65,42 @@
     transition-duration: 100ms;
     transition-property: transform;
     transform: scale(1);
-    animation: bouncing 0.5s cubic-bezier(.1,.25,.1,1) 0s infinite alternate both;
+    animation: bouncing 0.5s cubic-bezier(0.1, 0.25, 0.1, 1) 0s infinite
+        alternate both;
     display: inline-block;
     position: relative;
 }
 
 .title {
-    font-family: 'Valoon';
+    font-family: "Valoon";
     font-size: 20vw;
     font-weight: bold;
-    -webkit-text-fill-color: rgb(255,109,255);
+    -webkit-text-fill-color: rgb(255, 109, 255);
     -webkit-text-stroke: 2px white;
     animation: pulse 3s infinite;
     animation-delay: 3s;
-    text-shadow: -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black, 2px 2px 0 black;
+    text-shadow:
+        -2px -2px 0 black,
+        2px -2px 0 black,
+        -2px 2px 0 black,
+        2px 2px 0 black;
 }
 
 @media (orientation: landscape) {
-  .title {
-    font-size: 15vh;
-  }
+    .title {
+        font-size: 15vh;
+    }
 
-  .background {
-    background-position: bottom;
-    transform: scale(1);
-  }
+    .background {
+        background-position: bottom;
+        transform: scale(1);
+    }
 
-  .start-button {
-    height: 30vw;
-    width: 30vw;
-    font-size: 2.4vmax;
-  }
+    .start-button {
+        height: 30vw;
+        width: 30vw;
+        font-size: 2.4vmax;
+    }
 }
 
 @keyframes boxShadowPulse {
@@ -126,38 +131,38 @@
     }
 }
 
-@keyframes bouncing{
-  0%  {
-    bottom: 0;
-  }
-  100%{
-    bottom: 5vh;
-  }
+@keyframes bouncing {
+    0% {
+        bottom: 0;
+    }
+    100% {
+        bottom: 5vh;
+    }
 }
 
-@keyframes float{
-  0%  {
-    transform: scale(1) translateY(0);
-  }
-  86%{
-    transform: scale(1.6) translateY(-12vh);
-  }
-  90%{
-    transform: scale(1.5) translateY(-12vh);
-  }
-  94%{
-    transform: scale(1.7) translateY(-12vh);
-  }
-  95%{
-    transform: scale(1.6) translateY(-12vh);
-  }
-  96%{
-    transform: scale(1.8) translateY(-12vh);
-  }
-  98%{
-    transform: scale(2) translateY(-12vh);
-  }
-  100%{
-    transform: scale(2.5) translateY(-12vh);
-  }
+@keyframes float {
+    0% {
+        transform: scale(1) translateY(0);
+    }
+    86% {
+        transform: scale(1.6) translateY(-12vh);
+    }
+    90% {
+        transform: scale(1.5) translateY(-12vh);
+    }
+    94% {
+        transform: scale(1.7) translateY(-12vh);
+    }
+    95% {
+        transform: scale(1.6) translateY(-12vh);
+    }
+    96% {
+        transform: scale(1.8) translateY(-12vh);
+    }
+    98% {
+        transform: scale(2) translateY(-12vh);
+    }
+    100% {
+        transform: scale(2.5) translateY(-12vh);
+    }
 }

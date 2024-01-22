@@ -1,12 +1,14 @@
 <div class="background"></div>
-  <div class="menu">
-      <h1 class="title">SUPER BALLOON POPPER!!!</h1>
-      <button
+<div class="menu">
+    <h1 class="title">SUPER BALLOON POPPER!!!</h1>
+    <button
         class="start-button"
         [class.active]="!isClicked()"
         [class.bounce]="!isClicked()"
         [class.inactive]="isClicked()"
-        (click)="navigateToPlay()">
-          LET'S GO!!
-      </button>
-  </div>
+        (touchstart)="navigateToPlay()"
+        (click)="navigateToPlay()"
+    >
+        LET'S GO!!
+    </button>
+</div>
