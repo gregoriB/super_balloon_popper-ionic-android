@@ -3,11 +3,16 @@
   src: url('../assets/fonts/balloon-font.otf');
 }
 
+@font-face {
+  font-family: 'Valoon';
+  src: url('../assets/fonts/Valoon.ttf');
+}
+
 .app {
     text-align: center;
     height: 100vh;
     width: 100vw;
-    background: aliceblue;
+    background: rgb(118,235,255);
     display: flex;
     justify-content: center;
     flex-direction: column;

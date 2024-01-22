@@ -66,14 +66,14 @@ const bgmArr = [
 const startingBgmSongIndex = Math.floor(Math.random() * bgmArr.length);
 
 function generateRandomBalloon(colors: string[]): LevelObjectConfig {
-    const [minSize, maxSize] = [0.4, 0.8];
+    const [minSize, maxSize] = [0.8, 1.1];
     // const [minStep, maxStep] = [0.03, 0.08];
     const [minStep, maxStep] = [0.1, 0.6];
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
     return {
         obj: {
-            id: window.crypto.getRandomValues(new Uint8Array(10)).join(),
+            id: window.crypto.getRandomValues(new Uint8Array(10)).join(''),
             name: InteractableObject.BALLOON,
             style: {
                 backgroundColor: randomColor,
@@ -93,7 +93,7 @@ const generateNewItems = (count = 5) => {
     return new Array(count).fill(0).map(() => generateRandomBalloon(colors));
 };
 
-const numBalloons = 3;
+const numBalloons = 2;
 
 @Component({
     selector: 'app-play',
@@ -109,6 +109,7 @@ export class PlayPage implements AfterViewInit, OnDestroy {
     currentTouch = signal<[number, number]>([0, 0]);
     bgmSongIndex = signal<number>(0);
     bounds = signal<Bounds>(this.windowBounds);
+    isThrottled = signal(false);
 
     bgmSong!: HTMLAudioElement;
     interactionSound!: HTMLAudioElement;
@@ -144,10 +145,6 @@ export class PlayPage implements AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
         this.bgmSongIndex.set(startingBgmSongIndex);
-        this.playInflateAudio();
-        screen.orientation.addEventListener('change', () => {
-
-        });
     }
 
     ngOnDestroy() {
@@ -191,6 +188,9 @@ export class PlayPage implements AfterViewInit, OnDestroy {
     }
 
     interactionEvent(objConfig: ObjectUpdate) {
+        if (this.isThrottled()) return;
+        this.isThrottled.set(true)
+        window.setTimeout(() => (this.isThrottled.set(false)), 200)
         const updatedObjects = this.createUpdatedLevelObjects(objConfig);
         if (this.isEveryObjectInactive(updatedObjects)) {
             this.incrementLevel(updatedObjects);

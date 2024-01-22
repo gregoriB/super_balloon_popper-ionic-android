@@ -38,8 +38,7 @@ export class AppComponent implements OnInit, ViewDidEnter {
         this.enterFullScreenMode();
         this.router.navigate(['menu']);
     }
-
-    ionViewDidEnter() {
+ionViewDidEnter() {
         this.routerOutlet.swipeGesture = false;
         this.menuController.swipeGesture(false);
     }

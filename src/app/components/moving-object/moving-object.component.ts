@@ -29,6 +29,7 @@ interface Style {
     imports: [BalloonComponent, CommonModule],
 })
 export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
+    @Input({ required: true }) isThrottled!: boolean;
     @Input({ required: true }) bounds!: Bounds;
     @Input({ required: true }) movementConfig!: MovementConfig;
     @Input({ required: true }) objectConfig!: ObjectConfig;
@@ -46,6 +47,11 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
         if (previousTouch && currentTouch) {
            this.handleCurrentTouchChange(previousTouch, currentTouch);
         }
+        // const currentIsThrottled = changes['isThrottled']?.currentValue;
+        // const previousIsThrottled = changes['isThrottled']?.previousValue;
+        // if (!currentIsThrottled && previousIsThrottled && this.isTouchInObject) {
+        //   this.onInteract();
+        // }
         const currentConfig = changes['objectConfig']?.currentValue;
         if (currentConfig) {
           this.handleActiveStateChange(currentConfig.isActive);
@@ -110,6 +116,9 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     get isTouchInObject(): boolean {
+        if (this.isThrottled) {
+          return false;
+        }
         const { width: objectW, height: objectH } = this.size;
         const [cX, cY] = this.currentTouch;
         const [pX, pY] = this.objPos();
