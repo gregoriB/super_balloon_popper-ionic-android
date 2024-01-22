@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
 @Component({
@@ -21,14 +21,14 @@ export class MenuPage {
     this.playInflateAudio();
     window.setTimeout(() => {
       this.router.navigate(['play']);
-    }, 950);
+    }, 1600);
   }
 
   playInflateAudio() {
       const inflateSound = new Audio('../../../assets/sounds/inflate.flac');
       inflateSound.play();
-      inflateSound.playbackRate = 3;
-      inflateSound.addEventListener('ended', this.playPopAudio);
+      inflateSound.playbackRate = 2.9;
+      setTimeout(this.playPopAudio, 700);
   }
 
   playPopAudio() {

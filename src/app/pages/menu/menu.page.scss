@@ -34,8 +34,6 @@
     width: 30vh;
     font-family: 'Valoon';
     font-size: 3.5vmax;
-    // font-size: 250%;
-    // font-weight: bold;
     background: rgba(255,20,147, 0);
     border: none;
     border-radius: 100%;
@@ -53,14 +51,13 @@
 }
 
 .start-button.inactive {
-    transition-duration: 1200ms;
-    transition-delay: 0ms;
-    transition-property: transform;
-    transform: scale(5);
+    opacity: 0;
+    transition-delay: 900ms;
+    transition-property: opacity;
     color: transparent;
     -webkit-text-fill-color: transparent;
     -webkit-text-stroke: 1.45px transparent;
-    animation: float 1400ms linear;
+    animation: float 800ms linear;
     animation-iteration-count: 1;
 }
 
@@ -142,7 +139,25 @@
   0%  {
     transform: scale(1) translateY(0);
   }
+  86%{
+    transform: scale(1.6) translateY(-12vh);
+  }
+  90%{
+    transform: scale(1.5) translateY(-12vh);
+  }
+  94%{
+    transform: scale(1.7) translateY(-12vh);
+  }
+  95%{
+    transform: scale(1.6) translateY(-12vh);
+  }
+  96%{
+    transform: scale(1.8) translateY(-12vh);
+  }
+  98%{
+    transform: scale(2) translateY(-12vh);
+  }
   100%{
-    transform: scale(3) translateY(-12vh);
+    transform: scale(2.5) translateY(-12vh);
   }
 }
