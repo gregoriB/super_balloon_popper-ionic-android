@@ -55,9 +55,9 @@ const bgmArr = [
 const startingBgmSongIndex = Math.floor(Math.random() * bgmArr.length);
 
 function generateRandomBalloon(index: number): LevelObjectConfig {
-    const [minSize, maxSize] = [0.8, 1];
+    const [minSize, maxSize] = [0.7, 0.9];
     // const [minSize, maxSize] = [0.3, .5];;
-    const [minStep, maxStep] = [0.1, 0.6];
+    const [minStep, maxStep] = [0.15, 0.4];
     const size = Math.max(Math.random() * maxSize, minSize);
 
     return {
@@ -69,7 +69,6 @@ function generateRandomBalloon(index: number): LevelObjectConfig {
         },
         movement: {
             index,
-            // size: Math.max(Math.random() * maxSize, minSize),
             size: { width: size, height: size + 0.2 },
             step: Math.max(Math.random() * maxStep, minStep),
             startPos: null,

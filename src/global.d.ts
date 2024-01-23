@@ -7,7 +7,7 @@ declare interface MovementConfig {
 
 declare interface AttrConfig {
     name: string;
-    id: string | number;
+    id: string;
     isActive: boolean;
     basePoints: number;
 }

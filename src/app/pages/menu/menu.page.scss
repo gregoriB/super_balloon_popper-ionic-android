@@ -20,8 +20,8 @@
     height: 100vh;
     width: 100vw;
     background-color: rgb(118, 235, 255);
-    background-image: url("../../../assets/images/balloon_background2.png");
-    background-position: 42%;
+    background-image: url("../../../assets/images/balloons_background_4_1.png");
+    background-position: 53%;
     background-repeat: no-repeat;
     background-size: cover;
     transform: scale(1.4);
@@ -92,29 +92,14 @@
     }
 
     .background {
-        background-position: bottom;
+        background-position: 0 60%;
         transform: scale(1);
     }
 
     .start-button {
-        background-position: 0 50%;
         height: 30vw;
         width: 30vw;
         font-size: 2.4vmax;
-    }
-}
-
-@keyframes boxShadowPulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1);
-    }
-
-    79% {
-        box-shadow: 0 0 0 15px rgba(0, 0, 0, 0.005);
-    }
-
-    80% {
-        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
     }
 }
 

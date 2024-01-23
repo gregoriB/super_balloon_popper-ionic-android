@@ -79,9 +79,10 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     get randomPos(): [number, number] {
+        const idFirstNum = Number(this.objectConfig.id[0]);
         const pos: [number, number] = [
-            this.random * this.bounds.width[1],
-            this.random * this.bounds.height[1],
+            this.random * Math.abs(this.bounds.width[1] / idFirstNum),
+            this.random * Math.abs(this.bounds.height[1] / idFirstNum),
         ];
 
         // should be negative
@@ -94,10 +95,9 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     get size(): { width: number; height: number } {
-        const multiplier = Math.min(
-            this.bounds.width[1],
-            this.bounds.height[1],
-        );
+        const { width: bWidth, height: bHeight } = this.bounds;
+        const diff = Math.abs(bWidth[1] - bHeight[1]);
+        const multiplier = Math.max(bWidth[1], bHeight[1]) / 2.5;
         return {
             width: multiplier * this.movementConfig.size.width,
             height: multiplier * this.movementConfig.size.height,
