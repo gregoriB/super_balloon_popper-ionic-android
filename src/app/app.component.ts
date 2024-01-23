@@ -39,7 +39,7 @@ export class AppComponent implements OnInit, ViewDidEnter {
             app.exitApp();
         });
         this.enterFullScreenMode();
-        this.router.navigate(['play']);
+        this.router.navigate(['menu']);
     }
 
     ionViewDidEnter() {

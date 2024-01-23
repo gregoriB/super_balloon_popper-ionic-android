@@ -4,7 +4,6 @@ import {
     Component,
     HostListener,
     OnDestroy,
-    ViewChild,
     effect,
     signal,
 } from '@angular/core';
@@ -98,6 +97,7 @@ export class PlayPage implements AfterViewInit, OnDestroy {
     currentTouch = signal<[number, number]>([0, 0]);
     bgmSongIndex = signal<number>(0);
     bounds = signal<Bounds>(this.windowBounds);
+    computed = signal<number>(3);
     isThrottled = signal(false);
 
     bgmSong!: HTMLAudioElement;

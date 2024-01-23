@@ -79,12 +79,11 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     get randomPos(): [number, number] {
-        const idFirstNum = Number(this.objectConfig.id[0]);
+        const idFirstNum = Number(this.objectConfig.id[0]) || 1;
         const pos: [number, number] = [
             this.random * Math.abs(this.bounds.width[1] / idFirstNum),
             this.random * Math.abs(this.bounds.height[1] / idFirstNum),
         ];
-
         // should be negative
         const diffX = pos[0] + this.size.width - this.bounds.width[1];
         const diffY = pos[1] + this.size.height - this.bounds.height[1];
