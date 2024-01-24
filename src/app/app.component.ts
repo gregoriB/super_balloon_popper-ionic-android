@@ -1,4 +1,7 @@
-import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen/ngx';
+import {
+    AndroidFullScreen,
+    AndroidSystemUiFlags,
+} from '@awesome-cordova-plugins/android-full-screen/ngx';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -34,8 +37,8 @@ export class AppComponent implements OnInit, ViewDidEnter {
     private androidFullScreen = inject(AndroidFullScreen);
     private platform = inject(Platform);
     private menuController = inject(MenuController);
-    maxTouchToExit = 4;
     private exitTimeout = 0;
+    maxTouchToExit = 4;
     isTouchPattern = signal(false);
     touchCount = signal(this.maxTouchToExit);
 
@@ -60,7 +63,7 @@ export class AppComponent implements OnInit, ViewDidEnter {
 
     exitApp(): void {
         const navigator = window.navigator as any;
-        const app: any = navigator['app'];
+        const app: any = navigator['menu'];
         app.exitApp();
     }
 
@@ -91,12 +94,24 @@ export class AppComponent implements OnInit, ViewDidEnter {
                 case '/advertisement':
                     return;
                 case '/play':
+                    if (!this.exitTimeout) {
+                        this.displaySytemUI();
+                    }
                     this.handleTouchToExit();
                     break;
                 default:
                     this.exitApp();
             }
         });
+    }
+
+    displaySytemUI() {
+        this.androidFullScreen.showUnderSystemUI();
+        this.androidFullScreen.showUnderStatusBar();
+        this.androidFullScreen.setSystemUiVisibility(
+            AndroidSystemUiFlags.LayoutStable |
+                AndroidSystemUiFlags.LayoutFullscreen,
+        );
     }
 
     handleTouchToExit() {
@@ -106,9 +121,15 @@ export class AppComponent implements OnInit, ViewDidEnter {
             this.exitTimeout = 0;
         }
 
+        const maxTimeout =
+            this.touchCount() < this.maxTouchToExit
+                ? 1000 * this.touchCount()
+                : 5000;
         this.exitTimeout = window.setTimeout(() => {
             this.initializeDefaults();
-        }, 3000);
+            this.enterFullScreenMode();
+            this.exitTimeout = 0;
+        }, maxTimeout);
 
         if (this.touchCount() <= 1) {
             clearTimeout(this.exitTimeout);
