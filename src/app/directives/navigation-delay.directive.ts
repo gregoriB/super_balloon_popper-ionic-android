@@ -4,7 +4,6 @@ import {
     Directive,
     ElementRef,
     HostListener,
-    Inject,
     Input,
     OnDestroy,
     Renderer2,
@@ -47,6 +46,7 @@ export class NavigationDelayDirective
         '$event.altKey',
         '$event.metaKey',
     ])
+
     // @ts-ignore
     onClick(
         button: number,
@@ -55,14 +55,10 @@ export class NavigationDelayDirective
         altKey: boolean,
         metaKey: boolean,
     ): boolean {
-        console.log(this.delay);
-        console.log(this.routerLink);
         this.timer$ = timer(this.delay)
             .pipe(first())
             .subscribe(() => {
-                console.log(this);
                 this.routerLink = 'play';
-                console.log('clicking');
                 super.onClick(button, ctrlKey, shiftKey, altKey, metaKey);
             });
         return false;

@@ -1,15 +1,11 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
-    OnDestroy,
     OnInit,
-    ViewChild,
     inject,
     signal,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { NavigationDelayDirective } from 'src/app/directives/navigation-delay.directive';
 
 @Component({
     selector: 'app-menu',
@@ -17,7 +13,7 @@ import { NavigationDelayDirective } from 'src/app/directives/navigation-delay.di
     styleUrl: './menu.page.scss',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterModule, NavigationDelayDirective],
+    imports: [RouterModule],
 })
 export class MenuPage implements OnInit {
     private router = inject(Router);

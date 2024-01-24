@@ -5,7 +5,6 @@ import {
     HostListener,
     OnInit,
     inject,
-    signal,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import {
@@ -16,7 +15,6 @@ import {
 } from '@ionic/angular';
 import { IonRouterOutlet } from '@ionic/angular/common';
 import { PlatformLocation } from '@angular/common';
-import { AnimationBuilder } from '@angular/animations';
 
 @Component({
     selector: 'app-root',
