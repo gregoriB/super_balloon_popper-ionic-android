@@ -1,10 +1,10 @@
 <div class="background"></div>
 <div class="menu">
-    <h1 class="title">SUPER BALLOON POPPER!!!</h1>
+    <h1 class="title" [class.fill]="isAnimated()">SUPER BALLOON POPPER!!!</h1>
     <button
         class="start-button"
-        [class.active]="!isClicked()"
-        [class.bounce]="!isClicked()"
+        [class.active]="!isClicked() && isAnimated()"
+        [class.bounce]="!isClicked() && isAnimated()"
         [class.inactive]="isClicked()"
         (touchstart)="navigateToPlay()"
         (click)="navigateToPlay()"

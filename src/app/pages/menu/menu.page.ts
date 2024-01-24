@@ -1,10 +1,15 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    ElementRef,
+    OnDestroy,
+    OnInit,
+    ViewChild,
     inject,
     signal,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { NavigationDelayDirective } from 'src/app/directives/navigation-delay.directive';
 
 @Component({
     selector: 'app-menu',
@@ -12,11 +17,18 @@ import { Router, RouterModule } from '@angular/router';
     styleUrl: './menu.page.scss',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterModule],
+    imports: [RouterModule, NavigationDelayDirective],
 })
-export class MenuPage {
+export class MenuPage implements OnInit {
     private router = inject(Router);
     isClicked = signal(false);
+    isAnimated = signal(false);
+    navigationDelay = 1700;
+
+    ngOnInit() {
+        setTimeout(() => this.isAnimated.set(true), 16);
+        this.initializeFlags();
+    }
 
     navigateToPlay() {
         if (this.isClicked()) {
@@ -24,9 +36,15 @@ export class MenuPage {
         }
         this.isClicked.set(true);
         this.playInflateAudio();
-        window.setTimeout(() => {
+        setTimeout(() => {
             this.router.navigate(['play']);
-        }, 1700);
+            this.initializeFlags();
+        }, this.navigationDelay);
+    }
+
+    initializeFlags() {
+        this.isClicked.set(false);
+        this.isAnimated.set(false);
     }
 
     playInflateAudio() {

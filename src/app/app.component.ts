@@ -2,6 +2,7 @@ import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen/
 import {
     ChangeDetectionStrategy,
     Component,
+    HostListener,
     OnInit,
     inject,
     signal,
@@ -14,6 +15,8 @@ import {
     ViewDidEnter,
 } from '@ionic/angular';
 import { IonRouterOutlet } from '@ionic/angular/common';
+import { PlatformLocation } from '@angular/common';
+import { AnimationBuilder } from '@angular/animations';
 
 @Component({
     selector: 'app-root',
@@ -27,19 +30,55 @@ import { IonRouterOutlet } from '@ionic/angular/common';
 export class AppComponent implements OnInit, ViewDidEnter {
     private router = inject(Router);
     private routerOutlet = inject(IonRouterOutlet);
+    private location = inject(PlatformLocation);
     private androidFullScreen = inject(AndroidFullScreen);
     private platform = inject(Platform);
     private menuController = inject(MenuController);
 
     async ngOnInit() {
         await this.platform.ready();
-        this.platform.backButton.subscribe(() => {
-            const navigator = window.navigator as any;
-            const app: any = navigator['app'];
-            app.exitApp();
-        });
+        this.handlePlatformBackButton();
+        this.handlePopStateChanges();
         this.enterFullScreenMode();
-        this.router.navigate(['menu']);
+        this.routeToMenu();
+    }
+
+    routeToMenu() {
+        this.router.navigateByUrl('menu');
+    }
+
+    exitApp(): void {
+        const navigator = window.navigator as any;
+        const app: any = navigator['app'];
+        app.exitApp();
+    }
+
+    @HostListener('document:visibilitychange', [
+        '$event.target.visibilityState',
+    ])
+    handleVisibilityChange(visibility: 'visible' | 'hidden') {
+        if (visibility === 'hidden') {
+            this.reloadApp();
+        }
+    }
+
+    handlePopStateChanges() {
+        this.location.onPopState(() => {
+            const path = this.location.pathname;
+            if (path === '/menu') {
+                this.reloadApp();
+            }
+        });
+    }
+
+    handlePlatformBackButton() {
+        this.platform.backButton.subscribe(() => {
+            this.reloadApp();
+        });
+    }
+
+    reloadApp() {
+        document.location.reload();
     }
 
     ionViewDidEnter() {

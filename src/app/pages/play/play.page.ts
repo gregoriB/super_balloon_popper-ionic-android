@@ -119,8 +119,8 @@ export class PlayPage implements AfterViewInit, OnDestroy {
 
     get windowBounds(): Bounds {
         return {
-            width: [0, screen.availWidth],
-            height: [0, screen.availHeight],
+            width: [0, window.innerWidth],
+            height: [0, window.innerHeight],
         };
     }
 
@@ -160,6 +160,18 @@ export class PlayPage implements AfterViewInit, OnDestroy {
             'ended',
             this.incrementBgmSong.bind(this),
         );
+    }
+
+    @HostListener('document:visibilitychange', [
+        '$event.target.visibilityState',
+    ])
+    toggleBgmAudio(visibilityState: 'visible' | 'hidden') {
+        if (visibilityState === 'hidden') {
+            this.bgmSong.pause();
+        }
+        if (visibilityState === 'visible') {
+            this.playBgmAudio();
+        }
     }
 
     playInteractionAudio(soundName: string) {

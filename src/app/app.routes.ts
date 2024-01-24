@@ -1,5 +1,4 @@
-import { Route, Routes } from '@angular/router';
-import { AppComponent } from './app.component';
+import { Routes } from '@angular/router';
 
 export const routes: Routes = [
     {
@@ -14,6 +13,6 @@ export const routes: Routes = [
     },
     {
         path: '**',
-        redirectTo: 'play',
+        redirectTo: 'menu',
     },
 ];

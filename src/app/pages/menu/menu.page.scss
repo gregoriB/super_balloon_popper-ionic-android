@@ -32,7 +32,7 @@
     letter-spacing: 0.08rem;
     height: 30vh;
     width: 30vh;
-    font-family: "Valoon";
+    font-family: "Bubble";
     font-size: 3.5vmax;
     background: rgba(255, 20, 147, 0);
     border: none;
@@ -45,9 +45,7 @@
     background-repeat: no-repeat;
     background-size: contain;
     padding-bottom: 1.5rem;
-    transition-duration: 100ms;
-    transition-property: transform;
-    transform: scale(0.5);
+    transform: scale(0.5) translateY(100vh);
 }
 
 .start-button.inactive {
@@ -62,28 +60,36 @@
 }
 
 .start-button.active {
-    transition-duration: 100ms;
+    transition-duration: 500ms;
     transition-property: transform;
-    transform: scale(1);
-    animation: bouncing 0.5s cubic-bezier(0.1, 0.25, 0.1, 1) 0s infinite
+    transform: scale(1) translateY(0);
+    animation: bouncing 0.5s cubic-bezier(0.1, 0.25, 0.1, 1) 450ms infinite
         alternate both;
     display: inline-block;
     position: relative;
 }
 
 .title {
+    transform: scale(1);
+    transition-duration: 3s;
+    transition-behaviors: cubic-bezier(0.1, 0.25, 0.1, 1);
     font-family: "Valoon";
     font-size: 20vw;
+    padding: 0 0.5rem;
     font-weight: bold;
     -webkit-text-fill-color: rgb(255, 109, 255);
     -webkit-text-stroke: 2px white;
-    animation: pulse 3s infinite;
-    animation-delay: 3s;
     text-shadow:
         -2px -2px 0 black,
         2px -2px 0 black,
         -2px 2px 0 black,
         2px 2px 0 black;
+}
+
+.title.fill {
+    transform: scale(1.05);
+    transition-property: transform;
+    transition-delay: 500ms;
 }
 
 @media (orientation: landscape) {
@@ -99,21 +105,7 @@
     .start-button {
         height: 30vw;
         width: 30vw;
-        font-size: 2.4vmax;
-    }
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-
-    33% {
-        transform: scale(1.05);
-    }
-
-    66% {
-        transform: scale(1.05);
+        font-size: 4vmax;
     }
 }
 
