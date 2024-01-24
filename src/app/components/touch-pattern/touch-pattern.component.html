@@ -1,0 +1,12 @@
+<div class="touch-pattern">
+    <div
+        class="instruction-text"
+        [class.pulse]="true"
+        [class.faster-pulse]="count === 2"
+        [class.fastest-pulse]="count === 1"
+    >
+        {{ countTexts[0] }}
+        <div class="count">{{ count }}</div>
+        {{ countTexts[1] }}
+    </div>
+</div>

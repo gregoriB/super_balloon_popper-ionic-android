@@ -2,9 +2,9 @@ import { AndroidFullScreen } from '@awesome-cordova-plugins/android-full-screen/
 import {
     ChangeDetectionStrategy,
     Component,
-    HostListener,
     OnInit,
     inject,
+    signal,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import {
@@ -14,14 +14,16 @@ import {
     ViewDidEnter,
 } from '@ionic/angular';
 import { IonRouterOutlet } from '@ionic/angular/common';
-import { PlatformLocation } from '@angular/common';
+import { NgIf, PlatformLocation } from '@angular/common';
+import { TouchPatternComponent } from './components/touch-pattern/touch-pattern.component';
+import { App } from '@capacitor/app';
 
 @Component({
     selector: 'app-root',
     templateUrl: 'app.component.html',
     styleUrls: ['app.component.scss'],
     standalone: true,
-    imports: [IonicModule, RouterModule],
+    imports: [IonicModule, RouterModule, TouchPatternComponent, NgIf],
     providers: [AndroidFullScreen, IonRouterOutlet],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -32,17 +34,28 @@ export class AppComponent implements OnInit, ViewDidEnter {
     private androidFullScreen = inject(AndroidFullScreen);
     private platform = inject(Platform);
     private menuController = inject(MenuController);
+    maxTouchToExit = 4;
+    private exitTimeout = 0;
+    isTouchPattern = signal(false);
+    touchCount = signal(this.maxTouchToExit);
 
     async ngOnInit() {
+        this.initializeDefaults();
         await this.platform.ready();
+        this.listenForAppStateChange();
         this.handlePlatformBackButton();
         this.handlePopStateChanges();
         this.enterFullScreenMode();
         this.routeToMenu();
     }
 
+    initializeDefaults() {
+        this.isTouchPattern.set(false);
+        this.touchCount.set(this.maxTouchToExit);
+    }
+
     routeToMenu() {
-        this.router.navigateByUrl('menu');
+        this.router.navigateByUrl('play');
     }
 
     exitApp(): void {
@@ -51,28 +64,65 @@ export class AppComponent implements OnInit, ViewDidEnter {
         app.exitApp();
     }
 
-    @HostListener('document:visibilitychange', [
-        '$event.target.visibilityState',
-    ])
-    handleVisibilityChange(visibility: 'visible' | 'hidden') {
-        if (visibility === 'hidden') {
-            this.reloadApp();
+    listenForAppStateChange() {
+        App.addListener('appStateChange', ({ isActive }) => {
+            this.handleVisibilityChange(isActive);
+        });
+    }
+
+    handleVisibilityChange(isActive: boolean) {
+        if (isActive) {
+            return;
         }
+        this.reloadApp();
     }
 
     handlePopStateChanges() {
         this.location.onPopState(() => {
-            const path = this.location.pathname;
-            if (path === '/menu') {
+            if (this.path === '/menu') {
                 this.reloadApp();
             }
         });
     }
 
     handlePlatformBackButton() {
-        this.platform.backButton.subscribe(() => {
-            this.reloadApp();
+        this.platform.backButton.subscribeWithPriority(1, () => {
+            switch (this.path) {
+                case '/advertisement':
+                    return;
+                case '/play':
+                    this.handleTouchToExit();
+                    break;
+                default:
+                    this.exitApp();
+            }
         });
+    }
+
+    handleTouchToExit() {
+        this.isTouchPattern.set(true);
+        if (this.exitTimeout) {
+            clearTimeout(this.exitTimeout);
+            this.exitTimeout = 0;
+        }
+
+        this.exitTimeout = window.setTimeout(() => {
+            this.initializeDefaults();
+        }, 3000);
+
+        if (this.touchCount() <= 1) {
+            clearTimeout(this.exitTimeout);
+            this.exitTimeout = 0;
+            this.initializeDefaults();
+            this.exitApp();
+            return;
+        }
+
+        this.touchCount.update((count) => count - 1);
+    }
+
+    get path() {
+        return this.location.pathname;
     }
 
     reloadApp() {

@@ -8,6 +8,7 @@ import {
     signal,
 } from '@angular/core';
 import { MovingObjectComponent } from 'src/app/components/moving-object/moving-object.component';
+import { TouchPatternComponent } from 'src/app/components/touch-pattern/touch-pattern.component';
 
 const colors = [
     'aqua',

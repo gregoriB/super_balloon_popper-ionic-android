@@ -1,3 +1,8 @@
 <ion-app class="app">
+    <app-touch-pattern
+        *ngIf="isTouchPattern()"
+        [count]="touchCount()"
+        [maxCount]="maxTouchToExit"
+    ></app-touch-pattern>
     <ion-router-outlet [swipeGesture]="false"></ion-router-outlet>
 </ion-app>
