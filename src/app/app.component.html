@@ -1,6 +1,6 @@
 <ion-app class="app">
     <app-touch-pattern
-        *ngIf="isTouchPattern()"
+        *ngIf="touchCount() > 0"
         [count]="touchCount()"
         [maxCount]="maxTouchToExit"
     ></app-touch-pattern>

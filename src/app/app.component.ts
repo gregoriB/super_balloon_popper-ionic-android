@@ -10,12 +10,7 @@ import {
     signal,
 } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import {
-    IonicModule,
-    MenuController,
-    Platform,
-    ViewDidEnter,
-} from '@ionic/angular';
+import { IonicModule, MenuController, Platform } from '@ionic/angular';
 import { IonRouterOutlet } from '@ionic/angular/common';
 import { NgIf, PlatformLocation } from '@angular/common';
 import { TouchPatternComponent } from './components/touch-pattern/touch-pattern.component';
@@ -30,7 +25,7 @@ import { App } from '@capacitor/app';
     providers: [AndroidFullScreen, IonRouterOutlet],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit, ViewDidEnter {
+export class AppComponent implements OnInit {
     private router = inject(Router);
     private routerOutlet = inject(IonRouterOutlet);
     private location = inject(PlatformLocation);
@@ -40,7 +35,7 @@ export class AppComponent implements OnInit, ViewDidEnter {
     private exitTimeout = 0;
     maxTouchToExit = 4;
     isTouchPattern = signal(false);
-    touchCount = signal(this.maxTouchToExit);
+    touchCount = signal(0);
 
     async ngOnInit() {
         this.initializeDefaults();
@@ -62,9 +57,7 @@ export class AppComponent implements OnInit, ViewDidEnter {
     }
 
     exitApp(): void {
-        const navigator = window.navigator as any;
-        const app: any = navigator['menu'];
-        app.exitApp();
+        App.exitApp();
     }
 
     listenForAppStateChange() {
@@ -95,7 +88,7 @@ export class AppComponent implements OnInit, ViewDidEnter {
                     return;
                 case '/play':
                     if (!this.exitTimeout) {
-                        this.displaySytemUI();
+                        this.initializeTouchToExit();
                     }
                     this.handleTouchToExit();
                     break;
@@ -112,6 +105,11 @@ export class AppComponent implements OnInit, ViewDidEnter {
             AndroidSystemUiFlags.LayoutStable |
                 AndroidSystemUiFlags.LayoutFullscreen,
         );
+    }
+
+    initializeTouchToExit() {
+        this.displaySytemUI();
+        this.touchCount.set(this.maxTouchToExit);
     }
 
     handleTouchToExit() {
