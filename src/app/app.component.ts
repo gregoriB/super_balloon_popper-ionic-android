@@ -49,11 +49,11 @@ export class AppComponent implements OnInit {
 
     initializeDefaults() {
         this.isTouchPattern.set(false);
-        this.touchCount.set(this.maxTouchToExit);
+        this.touchCount.set(0);
     }
 
     routeToMenu() {
-        this.router.navigateByUrl('play');
+        this.router.navigateByUrl('menu');
     }
 
     exitApp(): void {
