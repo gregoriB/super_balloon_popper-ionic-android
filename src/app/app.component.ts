@@ -40,11 +40,13 @@ export class AppComponent implements OnInit {
     async ngOnInit() {
         this.initializeDefaults();
         await this.platform.ready();
-        this.listenForAppStateChange();
+        //// Disable this because causing bugs
+        //// when using interaction control
+        // this.listenForAppStateChange();
         this.handlePlatformBackButton();
         this.handlePopStateChanges();
         this.enterFullScreenMode();
-        this.routeToMenu();
+        this.routeToFirstPage();
     }
 
     initializeDefaults() {
@@ -54,6 +56,18 @@ export class AppComponent implements OnInit {
 
     routeToMenu() {
         this.router.navigateByUrl('menu');
+    }
+
+    routeToAccessibilityPage() {
+        this.router.navigateByUrl('accessibility');
+    }
+
+    routeToFirstPage() {
+        if (!this.isWeb) {
+            this.routeToAccessibilityPage();
+        } else {
+            this.routeToMenu();
+        }
     }
 
     exitApp(): void {
@@ -168,6 +182,10 @@ export class AppComponent implements OnInit {
 
     get isIOS(): boolean {
         return this.platform.is('ios');
+    }
+
+    get isWeb(): boolean {
+        return this.platform.is('mobileweb') || this.platform.is('pwa');
     }
 
     async setAndroidFullScreen() {

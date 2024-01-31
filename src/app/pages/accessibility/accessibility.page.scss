@@ -1,0 +1,169 @@
+.accessibility {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100001;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    width: 100vw;
+    padding: 1rem 0.5rem;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(118, 235, 255);
+    background-image: url("../../../assets/images/balloons_background_4_1.png");
+    background-position: 53%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    transform: scale(1.4);
+    filter: saturate(150%);
+}
+
+.next-step-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5rem;
+    height: 8vh;
+}
+
+.next-step-container button {
+    height: 100%;
+    border-radius: 5px;
+    max-width: 40vw;
+}
+
+.settings-button {
+    padding: 0 1rem;
+    color: #555;
+    background-color: white;
+    font-family: "georgia";
+    font-size: 1.4vmax;
+}
+
+.continue-button {
+    padding: 0 1.5rem;
+    border: 2px solid white;
+    letter-spacing: 0.1rem;
+    font-family: "Bubble";
+    font-size: 1.6vmax;
+    font-weight: bold;
+    -webkit-text-fill-color: white;
+    color: rgb(255, 109, 255);
+    background-color: rgb(255, 109, 255);
+}
+
+.header-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: -4vmax;
+}
+
+.header-container .close-button {
+    opacity: 0.9;
+    border: 2px solid rgb(244, 138, 57);
+    border-color: rgb(255, 109, 255);
+    background-color: rgb(255, 109, 255);
+    color: white;
+    font-family: "Valoon";
+    font-size: 5vmax;
+    border-radius: 100%;
+    height: 7vmax;
+    width: 7vmax;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // position: absolute;
+    // top: 0;
+    // right: 0;
+    z-index: 1000;
+}
+
+.instructions-container {
+    padding: 1rem;
+    width: 90%;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+    margin: 1rem auto;
+}
+
+$size: 1px;
+// $color: rgba(0, 0, 0, 1);
+$color: rgba(255, 255, 255, 0.7);
+.instructions-container .text {
+    // padding: 0 10vmax;
+    text-align: left;
+    color: #888;
+    font-family: Arial, serif;
+    font-weight: bold;
+    font-size: 1.8vmax;
+    text-shadow:
+        (-$size) (-$size) 0 $color,
+        $size (-$size) 0 $color,
+        (-$size) $size 0 $color,
+        $size $size 0 $color;
+    margin-bottom: 1vmax;
+}
+
+.instructions-container .interaction-control-text {
+    font-style: italic;
+    font-size: 2vmax;
+}
+
+.img-container {
+    background-position: top;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+@media (orientation: portrait) {
+    .img-container {
+        height: 100%;
+        width: 100%;
+        background-image: url("../../../assets/images/interaction_control.jpg");
+    }
+}
+
+@media (orientation: landscape) {
+    .instructions-container {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        margin: 2vmax auto;
+    }
+
+    .instructions-container .text {
+        padding: 3vmax;
+        max-width: 40%;
+    }
+
+    .img-container {
+        height: 100%;
+        width: 100%;
+        // flex-grow: 2;
+        // height: 100%;
+        background-image: url("../../../assets/images/interaction_control_landscape.jpg");
+        background-position: top;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    .background {
+        background-position: 0 60%;
+        transform: scale(1);
+    }
+}

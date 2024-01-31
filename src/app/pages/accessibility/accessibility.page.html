@@ -1,0 +1,24 @@
+<div class="background"></div>
+<div class="accessibility">
+    <div class="header-container">
+        <button routerLink="menu" class="close-button"><span>x</span></button>
+    </div>
+
+    <div class="instructions-container">
+        <div class="text">
+            Babies are experts at escaping apps! For the best experience, enable
+            the
+            <span class="interaction-control-text">Interaction Control</span>
+            accessibility setting on your device. Then disable the top and
+            bottom edges of the screen, like so:
+        </div>
+        <div class="img-container"></div>
+    </div>
+
+    <div class="next-step-container">
+        <button class="settings-button" (click)="handleAccessibilityClick()">
+            Accessibility Settings
+        </button>
+        <button routerLink="menu" class="continue-button">CONTINUE!</button>
+    </div>
+</div>
