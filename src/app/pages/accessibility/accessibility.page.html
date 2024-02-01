@@ -1,7 +1,9 @@
-<div class="background"></div>
+<div class="main-background"></div>
 <div class="accessibility">
     <div class="header-container">
-        <button routerLink="menu" class="close-button"><span>x</span></button>
+        <button (click)="proceedToNextPage()" class="close-button">
+            <span>x</span>
+        </button>
     </div>
 
     <div class="instructions-container">
@@ -19,6 +21,8 @@
         <button class="settings-button" (click)="handleAccessibilityClick()">
             Accessibility Settings
         </button>
-        <button routerLink="menu" class="continue-button">CONTINUE!</button>
+        <button (click)="proceedToNextPage()" class="continue-button">
+            CONTINUE!
+        </button>
     </div>
 </div>

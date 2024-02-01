@@ -18,3 +18,25 @@
     flex-direction: column;
     align-items: center;
 }
+
+.main-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(118, 235, 255);
+    background-image: url("../assets/images/balloons_background_4_1.png");
+    background-position: 53%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    transform: scale(1.4);
+    filter: saturate(150%);
+}
+
+@media (orientation: landscape) {
+    .main-background {
+        background-position: 0 60%;
+        transform: scale(1);
+    }
+}

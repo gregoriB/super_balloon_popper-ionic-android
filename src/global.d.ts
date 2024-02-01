@@ -33,3 +33,11 @@ declare interface ObjectUpdate {
 declare enum InteractableObject {
     BALLOON = 'balloon',
 }
+
+declare const enum Pages {
+    ADVERTISEMENT_PAGE = 'advertisement',
+    ACCESSIBILITY_PAGE = 'accessibility',
+    MENU_PAGE = 'menu',
+    PLAY_PAGE = 'play',
+    APP_PAGE = 'app',
+}

@@ -5,7 +5,7 @@ import {
     inject,
     signal,
 } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationService } from 'src/app/services/navigation.service';
 
 @Component({
     selector: 'app-menu',
@@ -13,10 +13,9 @@ import { Router, RouterModule } from '@angular/router';
     styleUrl: './menu.page.scss',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterModule],
 })
 export class MenuPage implements OnInit {
-    private router = inject(Router);
+    private navigation = inject(NavigationService);
     isClicked = signal(false);
     isAnimated = signal(false);
     navigationDelay = 1700;
@@ -33,7 +32,7 @@ export class MenuPage implements OnInit {
         this.isClicked.set(true);
         this.playInflateAudio();
         setTimeout(() => {
-            this.router.navigate(['play']);
+            this.navigation.proceedFrom(Pages.MENU_PAGE);
             this.initializeFlags();
         }, this.navigationDelay);
     }

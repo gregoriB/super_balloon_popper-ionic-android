@@ -2,24 +2,31 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
     {
-        path: 'accessibility',
+        path: Pages.ACCESSIBILITY_PAGE,
         loadComponent: () =>
             import('./pages/accessibility/accessibility.page').then(
                 (m) => m.AccessibilityPage,
             ),
     },
     {
-        path: 'menu',
+        path: Pages.MENU_PAGE,
         loadComponent: () =>
             import('./pages/menu/menu.page').then((m) => m.MenuPage),
     },
     {
-        path: 'play',
+        path: Pages.PLAY_PAGE,
         loadComponent: () =>
             import('./pages/play/play.page').then((m) => m.PlayPage),
     },
     {
+        path: Pages.ADVERTISEMENT_PAGE,
+        loadComponent: () =>
+            import('./pages/advertisement/advertisement.page').then(
+                (m) => m.AdvertisementPage,
+            ),
+    },
+    {
         path: '**',
-        redirectTo: 'menu',
+        redirectTo: Pages.MENU_PAGE,
     },
 ];
