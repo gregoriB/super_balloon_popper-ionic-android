@@ -6,9 +6,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
-import { IonicStorageModule } from '@ionic/storage-angular';
-import { StorageService } from './app/services/storage.service';
-import { NavigationService } from './app/services/navigation.service';
+import { IonicStorageModule, Storage } from '@ionic/storage-angular';
 
 bootstrapApplication(AppComponent, {
     providers: [
@@ -23,9 +21,7 @@ bootstrapApplication(AppComponent, {
             enabled: !isDevMode(),
             registrationStrategy: 'registerWhenStable:30000',
         }),
-        IonicStorageModule,
         Storage,
-        NavigationService,
-        StorageService,
+        IonicStorageModule,
     ],
 });

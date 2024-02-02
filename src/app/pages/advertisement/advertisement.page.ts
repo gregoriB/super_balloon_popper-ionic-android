@@ -18,6 +18,6 @@ export class AdvertisementPage {
     private navigation = inject(NavigationService);
 
     proceedToNextStep() {
-        this.navigation.proceedFrom(Pages.ADVERTISEMENT_PAGE);
+        this.navigation.proceedToNextStep();
     }
 }

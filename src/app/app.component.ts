@@ -17,8 +17,6 @@ import { NgIf, PlatformLocation } from '@angular/common';
 import { TouchPatternComponent } from './components/touch-pattern/touch-pattern.component';
 import { App } from '@capacitor/app';
 import { NavigationService } from './services/navigation.service';
-import { StorageService } from './services/storage.service';
-import { Storage } from '@ionic/storage';
 
 @Component({
     selector: 'app-root',
@@ -26,13 +24,7 @@ import { Storage } from '@ionic/storage';
     styleUrls: ['app.component.scss'],
     standalone: true,
     imports: [IonicModule, RouterModule, TouchPatternComponent, NgIf],
-    providers: [
-        AndroidFullScreen,
-        IonRouterOutlet,
-        Storage,
-        StorageService,
-        NavigationService,
-    ],
+    providers: [AndroidFullScreen, IonRouterOutlet, NavigationService],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })
@@ -55,9 +47,9 @@ export class AppComponent implements OnInit {
         //// when using interaction control
         // this.listenForAppStateChange();
         this.handlePlatformBackButton();
-        this.handlePopStateChanges();
+        // this.handlePopStateChanges();
         this.enterFullScreenMode();
-        this.navigation.proceedFrom(Pages.APP_PAGE);
+        this.navigation.proceedToNextStep();
     }
 
     initializeDefaults() {
@@ -82,33 +74,22 @@ export class AppComponent implements OnInit {
     //     this.reloadApp();
     // }
     //
-    handlePopStateChanges() {
-        this.location.onPopState(() => {
-            if (this.path === '/menu') {
-                this.reloadApp();
-            }
-        });
-    }
+    // handlePopStateChanges() {
+    // this.location.onPopState(() => {
+    //     if (this.path === '/menu') {
+    //         this.reloadApp();
+    //     }
+    // });
+    // }
 
     handlePlatformBackButton() {
         this.platform.backButton.subscribeWithPriority(1, () => {
-            const isAdPage = this.path.includes('/advertisement');
             const isPlayPage = this.path.includes('/play');
-            const isMenuPage = this.path.includes('/menu');
-            const isAccessibilityPage = this.path.includes('/accessibility');
-            if (isAdPage) return;
             if (isPlayPage) {
                 if (!this.exitTimeout) {
                     this.initializeTouchToExit();
                 }
                 this.handleTouchToExit();
-                return;
-            }
-            if (isMenuPage) {
-                this.exitApp();
-            }
-            if (isAccessibilityPage) {
-                this.exitApp();
             }
         });
     }
@@ -148,7 +129,8 @@ export class AppComponent implements OnInit {
             clearTimeout(this.exitTimeout);
             this.exitTimeout = 0;
             this.initializeDefaults();
-            this.navigation.proceedFrom(Pages.PLAY_PAGE);
+            // this.navigation.proceedFrom(Pages.PLAY_PAGE);
+            this.navigation.proceedToNextStep();
             return;
         }
 

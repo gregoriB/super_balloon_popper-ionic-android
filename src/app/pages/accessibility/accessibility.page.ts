@@ -16,6 +16,6 @@ export class AccessibilityPage {
     }
 
     proceedToNextPage() {
-        this.navigation.proceedFrom(Pages.ACCESSIBILITY_PAGE);
+        this.navigation.proceedToNextStep();
     }
 }

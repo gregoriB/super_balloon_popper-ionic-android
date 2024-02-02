@@ -32,7 +32,7 @@ export class MenuPage implements OnInit {
         this.isClicked.set(true);
         this.playInflateAudio();
         setTimeout(() => {
-            this.navigation.proceedFrom(Pages.MENU_PAGE);
+            this.navigation.proceedToNextStep();
             this.initializeFlags();
         }, this.navigationDelay);
     }
