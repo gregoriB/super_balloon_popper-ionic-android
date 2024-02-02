@@ -6,16 +6,48 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
     height: 100vh;
     width: 100vw;
     padding: 1rem 0.5rem;
-}
-
-.advertisement {
     color: #444;
     font-weight: bold;
 }
 
+.text {
+    margin-top: 5vh;
+}
+
+.next-step-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0.5rem;
+    width: 100%;
+    height: 8vh;
+}
+
+.next-step-container button {
+    height: 100%;
+    border-radius: 5px;
+    max-width: 100vw;
+}
+
 .proceed-button {
-    height: 10vmax;
+    width: 100%;
+    flex-grow: 1;
+    border-radius: 5px;
+    height: 8vmax;
+    padding: 0 1rem;
+    color: #555;
+    background-color: white;
+    font-family: "georgia";
+    font-size: 1.4vmax;
+}
+
+.ad-container {
+    height: 90vmin;
+    width: 90vmin;
+    background-color: #555;
 }

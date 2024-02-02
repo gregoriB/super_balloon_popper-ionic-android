@@ -29,13 +29,13 @@ const colors = [
 export class BalloonComponent implements AfterViewInit, OnChanges {
     @Input({ required: true }) config!: AttrConfig;
 
-    selectedColor = colors[Math.floor(Math.random() * colors.length)];
-    saturation = Math.floor(Math.random() * 50) + 100;
-    contrast = Math.floor(Math.random() * 20) + 100;
-    brightness = Math.floor(Math.random() * 20) + 100;
+    selectedColor = colors[this.getRandom(colors.length)];
+    saturation = this.getRandom(50, 100);
+    contrast = this.getRandom(20, 100);
+    brightness = this.getRandom(20, 100);
     rotation = signal(0);
     direction = Math.random() > 0.5 ? 1 : -1;
-    rotationAmount = Math.floor(Math.random() * 30) + 5;
+    rotationAmount = this.getRandom(30, 5);
     interval: number = 0;
     style = computed(() => ({
         transform: `rotate(${this.rotation()}deg)`,
@@ -59,5 +59,9 @@ export class BalloonComponent implements AfterViewInit, OnChanges {
             window.clearTimeout(this.interval);
             this.interval = 0;
         }
+    }
+
+    getRandom(max: number, min = 0): number {
+        return Math.floor(Math.random() * max) + min;
     }
 }
