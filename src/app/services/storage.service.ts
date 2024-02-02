@@ -1,14 +1,13 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 
 @Injectable({
     providedIn: 'root',
 })
 export class StorageService {
-    private storage = inject(Storage);
     private _storage!: Storage;
 
-    constructor() {
+    constructor(private storage: Storage) {
         this.init();
     }
 

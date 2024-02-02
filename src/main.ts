@@ -7,6 +7,8 @@ import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { provideServiceWorker } from '@angular/service-worker';
 import { IonicStorageModule, Storage } from '@ionic/storage-angular';
+import { StorageService } from './app/services/storage.service';
+import { NavigationService } from './app/services/navigation.service';
 
 bootstrapApplication(AppComponent, {
     providers: [

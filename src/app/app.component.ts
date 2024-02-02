@@ -13,9 +13,8 @@ import {
 import { RouterModule } from '@angular/router';
 import { IonicModule, MenuController, Platform } from '@ionic/angular';
 import { IonRouterOutlet } from '@ionic/angular/common';
-import { NgIf, PlatformLocation } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { TouchPatternComponent } from './components/touch-pattern/touch-pattern.component';
-import { App } from '@capacitor/app';
 import { NavigationService } from './services/navigation.service';
 
 @Component({
@@ -30,7 +29,6 @@ import { NavigationService } from './services/navigation.service';
 })
 export class AppComponent implements OnInit {
     private routerOutlet = inject(IonRouterOutlet);
-    private location = inject(PlatformLocation);
     private androidFullScreen = inject(AndroidFullScreen);
     private platform = inject(Platform);
     private menuController = inject(MenuController);
@@ -43,11 +41,7 @@ export class AppComponent implements OnInit {
     async ngOnInit() {
         this.initializeDefaults();
         await this.platform.ready();
-        //// Disable this because causing bugs
-        //// when using interaction control
-        // this.listenForAppStateChange();
-        this.handlePlatformBackButton();
-        // this.handlePopStateChanges();
+        this.handleBackButton();
         this.enterFullScreenMode();
         this.navigation.proceedToNextStep();
     }
@@ -57,34 +51,9 @@ export class AppComponent implements OnInit {
         this.touchCount.set(0);
     }
 
-    exitApp(): void {
-        App.exitApp();
-    }
-
-    // listenForAppStateChange() {
-    //     App.addListener('appStateChange', ({ isActive }) => {
-    //         this.handleVisibilityChange(isActive);
-    //     });
-    // }
-    //
-    // handleVisibilityChange(isActive: boolean) {
-    //     if (isActive) {
-    //         return;
-    //     }
-    //     this.reloadApp();
-    // }
-    //
-    // handlePopStateChanges() {
-    // this.location.onPopState(() => {
-    //     if (this.path === '/menu') {
-    //         this.reloadApp();
-    //     }
-    // });
-    // }
-
-    handlePlatformBackButton() {
+    handleBackButton() {
         this.platform.backButton.subscribeWithPriority(1, () => {
-            const isPlayPage = this.path.includes('/play');
+            const isPlayPage = this.navigation.isCurrentPage(Pages.PLAY_PAGE);
             if (isPlayPage) {
                 if (!this.exitTimeout) {
                     this.initializeTouchToExit();
@@ -129,20 +98,11 @@ export class AppComponent implements OnInit {
             clearTimeout(this.exitTimeout);
             this.exitTimeout = 0;
             this.initializeDefaults();
-            // this.navigation.proceedFrom(Pages.PLAY_PAGE);
             this.navigation.proceedToNextStep();
             return;
         }
 
         this.touchCount.update((count) => count - 1);
-    }
-
-    get path() {
-        return this.location.pathname;
-    }
-
-    reloadApp() {
-        document.location.reload();
     }
 
     ionViewDidEnter() {
@@ -155,7 +115,7 @@ export class AppComponent implements OnInit {
             this.setAndroidFullScreen();
         }
         if (this.isIOS) {
-            this.setIOSFullScreen();
+            // TODO: IOS fullscreen logic
         }
     }
 
@@ -177,9 +137,5 @@ export class AppComponent implements OnInit {
         if (isImmersiveModeSupported) {
             this.androidFullScreen.immersiveMode();
         }
-    }
-
-    setIOSFullScreen(): void {
-        // TODO
     }
 }

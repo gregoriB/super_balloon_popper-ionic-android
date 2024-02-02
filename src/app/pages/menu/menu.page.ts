@@ -1,6 +1,8 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    HostListener,
+    OnDestroy,
     OnInit,
     inject,
     signal,
@@ -14,7 +16,7 @@ import { NavigationService } from 'src/app/services/navigation.service';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MenuPage implements OnInit {
+export class MenuPage implements OnInit, OnDestroy {
     private navigation = inject(NavigationService);
     isClicked = signal(false);
     isAnimated = signal(false);
@@ -22,6 +24,11 @@ export class MenuPage implements OnInit {
 
     ngOnInit() {
         setTimeout(() => this.isAnimated.set(true), 16);
+        this.initializeFlags();
+    }
+
+    @HostListener('unloaded')
+    ngOnDestroy() {
         this.initializeFlags();
     }
 

@@ -8,23 +8,6 @@ import {
     signal,
 } from '@angular/core';
 import { MovingObjectComponent } from 'src/app/components/moving-object/moving-object.component';
-import { TouchPatternComponent } from 'src/app/components/touch-pattern/touch-pattern.component';
-
-const colors = [
-    'aqua',
-    'chartreuse',
-    'cyan',
-    'greenyellow',
-    'hotpink',
-    'lime',
-    'magenta',
-    'orange',
-    'yellow',
-    'red',
-    'blue',
-    'springgreen',
-    'violet',
-];
 
 enum InteractableObject {
     BALLOON = 'balloon',
@@ -56,7 +39,6 @@ const startingBgmSongIndex = Math.floor(Math.random() * bgmArr.length);
 
 function generateRandomBalloon(index: number): LevelObjectConfig {
     const [minSize, maxSize] = [0.7, 0.9];
-    // const [minSize, maxSize] = [0.3, .5];;
     const [minStep, maxStep] = [0.15, 0.4];
     const size = Math.max(Math.random() * maxSize, minSize);
 
@@ -137,6 +119,7 @@ export class PlayPage implements AfterViewInit, OnDestroy {
         this.bgmSongIndex.set(startingBgmSongIndex);
     }
 
+    @HostListener('unloaded')
     ngOnDestroy() {
         this.bgmSong.pause();
         this.bgmSong.removeEventListener(

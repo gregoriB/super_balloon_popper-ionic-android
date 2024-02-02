@@ -1,30 +1,32 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { StorageService } from './storage.service';
 import { App } from '@capacitor/app';
 import { Platform } from '@ionic/angular';
 import { PlatformLocation } from '@angular/common';
 
-@Injectable({
-    providedIn: 'root',
-})
+/**
+ * Service maintains complete control over app navigation,
+ * including exiting the app when needed.
+ */
+@Injectable({ providedIn: 'root' })
 export class NavigationService {
-    private router = inject(Router);
-    private platform = inject(Platform);
-    private location = inject(PlatformLocation);
-    private storageService = inject(StorageService);
     private history: Pages[] = [];
     private hasVisited = false;
 
-    constructor() {
-        setTimeout(() => this.initialize());
+    constructor(
+        private router: Router,
+        private platform: Platform,
+        private location: PlatformLocation,
+        private storageService: StorageService,
+    ) {
+        setTimeout(this.initialize.bind(this));
     }
 
-    initialize() {
+    private async initialize() {
         this.subscribeToBackButton();
-        this.storageService.get('init').then((val: boolean | undefined) => {
-            this.hasVisited = Boolean(val);
-        });
+        const isInit = await this.storageService.get('init');
+        this.hasVisited = Boolean(isInit);
         this.proceedFromAppPage();
     }
 
@@ -32,28 +34,26 @@ export class NavigationService {
         this.proceedFrom(this.currentPage);
     }
 
-    proceedFrom(page: Pages) {
-        let pageChangeMethod: () => Pages;
+    private proceedFrom(page: Pages) {
         switch (page) {
             case Pages.ACCESSIBILITY_PAGE:
-                pageChangeMethod = this.proceedFromAccessibilityPage;
+                this.proceedFromAccessibilityPage();
                 break;
             case Pages.ADVERTISEMENT_PAGE:
-                pageChangeMethod = this.proceedFromAdvertisementPage;
+                this.proceedFromAdvertisementPage();
                 break;
             case Pages.MENU_PAGE:
-                pageChangeMethod = this.proceedFromMenuPage;
+                this.proceedFromMenuPage();
                 break;
             case Pages.PLAY_PAGE:
-                pageChangeMethod = this.proceedFromPlayPage;
+                this.proceedFromPlayPage();
                 break;
             case Pages.APP_PAGE:
-                pageChangeMethod = this.proceedFromAppPage;
+                this.proceedFromAppPage();
                 break;
             default:
                 return;
         }
-        pageChangeMethod.call(this);
         this.history.push(this.currentPage);
     }
 
@@ -128,7 +128,7 @@ export class NavigationService {
         return path as Pages;
     }
 
-    private isCurrentPage(page: Pages) {
+    isCurrentPage(page: Pages) {
         return this.currentPage === page;
     }
 }

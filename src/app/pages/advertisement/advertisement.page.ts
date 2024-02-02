@@ -1,10 +1,5 @@
 import { Location, PlatformLocation } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    OnInit,
-    inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NavigationService } from 'src/app/services/navigation.service';
 
 @Component({

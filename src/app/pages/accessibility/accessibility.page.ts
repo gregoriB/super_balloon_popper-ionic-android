@@ -11,6 +11,7 @@ import { NavigationService } from 'src/app/services/navigation.service';
 })
 export class AccessibilityPage {
     private navigation = inject(NavigationService);
+
     handleAccessibilityClick() {
         Settings.openAccessibilitySettings();
     }
