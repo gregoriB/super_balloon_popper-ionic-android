@@ -2,10 +2,10 @@
   "name": "Balloon Popper!",
   "short_name": "Balloon Popper",
   "theme_color": "#FFFFFF",
-  "background_color": "#ffffff",
   "display": "fullscreen",
   "scope": "./",
   "start_url": "./?fullscreen=true",
+  "background_color": "#ffffff",
   "icons": [
     {
       "src": "assets/icons/icon-48.webp",
