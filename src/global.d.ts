@@ -41,3 +41,9 @@ declare const enum Pages {
     PLAY_PAGE = 'play',
     APP_PAGE = 'app',
 }
+
+declare const enum Ad {
+    INTERSTITIAL = 'interstitial',
+    BANNER = 'banner',
+    REWARD = 'reward',
+}

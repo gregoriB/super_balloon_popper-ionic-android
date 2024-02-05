@@ -1,12 +1,11 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    HostListener,
-    OnDestroy,
     OnInit,
     inject,
     signal,
 } from '@angular/core';
+import { ViewDidEnter, ViewDidLeave } from '@ionic/angular';
 import { NavigationService } from 'src/app/services/navigation.service';
 
 @Component({
@@ -16,23 +15,28 @@ import { NavigationService } from 'src/app/services/navigation.service';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MenuPage implements OnInit, OnDestroy {
+export class MenuPage implements ViewDidLeave, ViewDidEnter {
     private navigation = inject(NavigationService);
     isClicked = signal(false);
     isAnimated = signal(false);
     navigationDelay = 1700;
+    animationTimeout: any;
 
-    ngOnInit() {
-        setTimeout(() => this.isAnimated.set(true), 16);
+    ionViewDidEnter() {
+        if (this.animationTimeout) return;
+        this.animationTimeout = setTimeout(() => {
+            this.isAnimated.set(true);
+            clearTimeout(this.animationTimeout);
+            this.animationTimeout = undefined;
+        }, 16);
         this.initializeFlags();
     }
 
-    @HostListener('unloaded')
-    ngOnDestroy() {
+    ionViewDidLeave() {
         this.initializeFlags();
     }
 
-    navigateToPlay() {
+    proceedToNextStep() {
         if (this.isClicked()) {
             return;
         }

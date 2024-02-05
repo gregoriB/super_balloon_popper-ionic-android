@@ -6,8 +6,8 @@
         [class.active]="!isClicked() && isAnimated()"
         [class.bounce]="!isClicked() && isAnimated()"
         [class.inactive]="isClicked()"
-        (touchstart)="navigateToPlay()"
-        (click)="navigateToPlay()"
+        (touchstart)="proceedToNextStep()"
+        (click)="proceedToNextStep()"
     >
         LET'S GO!!
     </button>

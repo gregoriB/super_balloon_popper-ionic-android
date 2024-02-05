@@ -3,7 +3,6 @@ import {
     AndroidSystemUiFlags,
 } from '@awesome-cordova-plugins/android-full-screen/ngx';
 import {
-    ChangeDetectionStrategy,
     Component,
     OnInit,
     ViewEncapsulation,
@@ -24,7 +23,6 @@ import { NavigationService } from './services/navigation.service';
     standalone: true,
     imports: [IonicModule, RouterModule, TouchPatternComponent, NgIf],
     providers: [AndroidFullScreen, IonRouterOutlet, NavigationService],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent implements OnInit {
@@ -43,16 +41,17 @@ export class AppComponent implements OnInit {
         await this.platform.ready();
         this.handleBackButton();
         this.enterFullScreenMode();
-        this.navigation.proceedToNextStep();
     }
 
     initializeDefaults() {
         this.isTouchPattern.set(false);
         this.touchCount.set(0);
+        this.routerOutlet.swipeGesture = false;
+        this.menuController.swipeGesture(false);
     }
 
     handleBackButton() {
-        this.platform.backButton.subscribeWithPriority(1, () => {
+        this.platform.backButton.subscribeWithPriority(5, () => {
             const isPlayPage = this.navigation.isCurrentPage(Pages.PLAY_PAGE);
             if (isPlayPage) {
                 if (!this.exitTimeout) {
@@ -63,7 +62,7 @@ export class AppComponent implements OnInit {
         });
     }
 
-    displaySytemUI() {
+    displaySystemUI() {
         this.androidFullScreen.showUnderSystemUI();
         this.androidFullScreen.showUnderStatusBar();
         this.androidFullScreen.setSystemUiVisibility(
@@ -73,11 +72,11 @@ export class AppComponent implements OnInit {
     }
 
     initializeTouchToExit() {
-        this.displaySytemUI();
+        this.displaySystemUI();
         this.touchCount.set(this.maxTouchToExit);
     }
 
-    handleTouchToExit() {
+    async handleTouchToExit() {
         this.isTouchPattern.set(true);
         if (this.exitTimeout) {
             clearTimeout(this.exitTimeout);
@@ -103,11 +102,6 @@ export class AppComponent implements OnInit {
         }
 
         this.touchCount.update((count) => count - 1);
-    }
-
-    ionViewDidEnter() {
-        this.routerOutlet.swipeGesture = false;
-        this.menuController.swipeGesture(false);
     }
 
     enterFullScreenMode() {

@@ -1,9 +1,20 @@
-<div class="main-background"></div>
+<!-- <div class="main-background"></div> -->
 <div class="advertisement">
     <div class="text">Advertisement</div>
-    <div class="ad-container"></div>
+    <div *ngIf="isLoading()" class="spinner-container">
+        <div class="spinner">
+            <div class="container">
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
     <div class="next-step-container">
-        <button class="proceed-button" (click)="proceedToNextStep()">
+        <button
+            [disabled]="isDisabled()"
+            class="proceed-button"
+            (click)="handleButtonClick()"
+        >
             Proceed
         </button>
     </div>

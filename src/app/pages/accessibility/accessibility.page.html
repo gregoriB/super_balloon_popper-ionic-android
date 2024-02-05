@@ -1,7 +1,11 @@
 <div class="main-background"></div>
 <div class="accessibility">
     <div class="header-container">
-        <button (click)="proceedToNextPage()" class="close-button">
+        <button
+            (disabled)="isLoading()"
+            (click)="proceedToNextStep()"
+            class="close-button"
+        >
             <span>x</span>
         </button>
     </div>
@@ -21,8 +25,18 @@
         <button class="settings-button" (click)="handleAccessibilityClick()">
             Accessibility Settings
         </button>
-        <button (click)="proceedToNextPage()" class="continue-button">
-            CONTINUE!
+        <button
+            (click)="proceedToNextStep()"
+            [disabled]="isLoading()"
+            class="continue-button"
+        >
+            <div *ngIf="!isLoading()" class="button-text">CONTINUE!</div>
+            <div *ngIf="isLoading()" class="button-spinner">
+                <div class="container">
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
         </button>
     </div>
 </div>

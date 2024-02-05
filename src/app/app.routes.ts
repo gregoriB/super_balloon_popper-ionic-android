@@ -25,8 +25,4 @@ export const routes: Routes = [
                 (m) => m.AdvertisementPage,
             ),
     },
-    {
-        path: '**',
-        redirectTo: Pages.MENU_PAGE,
-    },
 ];

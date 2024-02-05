@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { BalloonComponent } from '../balloon/balloon.component';
 import { CommonModule } from '@angular/common';
+import { ViewDidLeave } from '@ionic/angular';
 
 interface Style {
     left: string;
@@ -24,11 +25,13 @@ interface Style {
     selector: 'app-moving-object',
     templateUrl: './moving-object.component.html',
     styleUrls: ['./moving-object.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [BalloonComponent, CommonModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
+export class MovingObjectComponent
+    implements OnChanges, OnInit, ViewDidLeave, OnDestroy
+{
     @Input({ required: true }) isThrottled!: boolean;
     @Input({ required: true }) bounds!: Bounds;
     @Input({ required: true }) movementConfig!: MovementConfig;
@@ -171,6 +174,10 @@ export class MovingObjectComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnDestroy(): void {
+        this.stopMovement();
+    }
+
+    ionViewDidLeave(): void {
         this.stopMovement();
     }
 

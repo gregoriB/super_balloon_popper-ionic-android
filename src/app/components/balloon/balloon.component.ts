@@ -23,8 +23,8 @@ const colors = [
     selector: 'app-balloon',
     templateUrl: './balloon.component.html',
     styleUrls: ['./balloon.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BalloonComponent implements AfterViewInit, OnChanges {
     @Input({ required: true }) config!: AttrConfig;

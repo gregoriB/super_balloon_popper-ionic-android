@@ -3,10 +3,10 @@ import {
     ChangeDetectionStrategy,
     Component,
     HostListener,
-    OnDestroy,
     effect,
     signal,
 } from '@angular/core';
+import { ViewDidLeave } from '@ionic/angular';
 import { MovingObjectComponent } from 'src/app/components/moving-object/moving-object.component';
 
 enum InteractableObject {
@@ -71,14 +71,14 @@ const numBalloons = 2;
     templateUrl: './play.page.html',
     styleUrl: './play.page.scss',
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [MovingObjectComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PlayPage implements AfterViewInit, OnDestroy {
+export class PlayPage implements ViewDidLeave, AfterViewInit {
     levelObjects = signal<LevelObjectConfig[]>(generateNewItems(numBalloons));
     score = signal<number>(0);
     currentTouch = signal<[number, number]>([0, 0]);
-    bgmSongIndex = signal<number>(0);
+    bgmSongIndex = signal<number>(-1);
     bounds = signal<Bounds>(this.windowBounds);
     computed = signal<number>(3);
     isThrottled = signal(false);
@@ -116,11 +116,11 @@ export class PlayPage implements AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
+        if (this.bgmSongIndex() !== -1) return;
         this.bgmSongIndex.set(startingBgmSongIndex);
     }
 
-    @HostListener('unloaded')
-    ngOnDestroy() {
+    ionViewDidLeave() {
         this.bgmSong.pause();
         this.bgmSong.removeEventListener(
             'ended',

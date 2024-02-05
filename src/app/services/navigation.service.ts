@@ -23,11 +23,15 @@ export class NavigationService {
         setTimeout(this.initialize.bind(this));
     }
 
-    private async initialize() {
+    get isWeb(): boolean {
+        return this.platform.is('mobileweb') || this.platform.is('pwa');
+    }
+
+    async initialize() {
         this.subscribeToBackButton();
         const isInit = await this.storageService.get('init');
         this.hasVisited = Boolean(isInit);
-        this.proceedFromAppPage();
+        this.proceedToNextStep();
     }
 
     proceedToNextStep() {
@@ -58,13 +62,14 @@ export class NavigationService {
     }
 
     private subscribeToBackButton() {
-        this.platform.backButton.subscribeWithPriority(1, () => {
+        this.platform.backButton.subscribeWithPriority(10, (next) => {
             if (this.isCurrentPage(Pages.ACCESSIBILITY_PAGE)) {
                 this.exitApp();
             }
             if (this.isCurrentPage(Pages.MENU_PAGE)) {
                 this.exitApp();
             }
+            next();
         });
     }
 
@@ -75,7 +80,7 @@ export class NavigationService {
 
     private proceedFromAccessibilityPage(): Pages {
         let newPage = Pages.ADVERTISEMENT_PAGE;
-        if (!this.hasVisited) {
+        if (!this.hasVisited || this.isWeb) {
             newPage = Pages.MENU_PAGE;
             this.setHasVisited(true);
         }
@@ -116,8 +121,8 @@ export class NavigationService {
         return this.history[this.history.length - 1];
     }
 
-    private isLastPage(page: Pages) {
-        return this.lastPage === page;
+    isLastPage(page: Pages): Boolean {
+        return Boolean(this.lastPage === page);
     }
 
     get currentPage(): Pages {
