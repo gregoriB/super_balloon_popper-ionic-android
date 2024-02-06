@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { AccessibilityPage } from './pages/accessibility/accessibility.page';
 
-
 export const routes: Routes = [
     {
         path: Pages.ACCESSIBILITY_PAGE,
@@ -10,7 +9,9 @@ export const routes: Routes = [
     {
         path: Pages.ADVERTISEMENT_PAGE,
         loadComponent: () =>
-            import('./pages/advertisement/advertisement.page').then((m) => m.AdvertisementPage),
+            import('./pages/advertisement/advertisement.page').then(
+                (m) => m.AdvertisementPage,
+            ),
     },
     {
         path: Pages.MENU_PAGE,

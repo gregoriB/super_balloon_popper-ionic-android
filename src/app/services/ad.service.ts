@@ -1,9 +1,16 @@
 import { Injectable, computed, signal } from '@angular/core';
 import {
-    AdMob, AdmobConsentStatus, InterstitialAdPluginEvents, } from '@capacitor-community/admob';
+    AdMob,
+    AdmobConsentStatus,
+    InterstitialAdPluginEvents,
+} from '@capacitor-community/admob';
 import { PluginListenerHandle } from '@capacitor/core';
-import { adIdFirst, adIdSecond, adTimeout, environment } from 'src/environments/environment';
-
+import {
+    adIdFirst,
+    adIdSecond,
+    adTimeout,
+    environment,
+} from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root',
@@ -79,7 +86,6 @@ export class AdService {
         // });
     }
 
-
     async prepareInterstitial() {
         this.interstitialAdCount.update((ic) => ic++);
         await AdMob.prepareInterstitial({
@@ -89,21 +95,20 @@ export class AdService {
     }
 
     showInterstitial() {
-      return new Promise((res) => {
-        let timeout: any;
-        let onLoad = this.onLoadedInterstitial(() => {
-            AdMob.showInterstitial();
-            onLoad.remove();
-            clearTimeout(timeout);
-            res(true)
+        return new Promise((res) => {
+            let timeout: any;
+            let onLoad = this.onLoadedInterstitial(() => {
+                AdMob.showInterstitial();
+                onLoad.remove();
+                clearTimeout(timeout);
+                res(true);
+            });
+            setTimeout(() => {
+                onLoad.remove();
+                res(false);
+            }, adTimeout);
         });
-        setTimeout(() => {
-          onLoad.remove();
-          res(false);
-        }, adTimeout);
-      })
     }
-
 
     onShowInterstitial(callback: () => void) {
         return AdMob.addListener(InterstitialAdPluginEvents.Showed, callback);

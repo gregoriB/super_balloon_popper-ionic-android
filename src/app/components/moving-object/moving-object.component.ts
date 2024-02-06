@@ -143,7 +143,7 @@ export class MovingObjectComponent
     generateUpdatedPos(pos: number[], bearing: number[]): [number, number] {
         const [posX, posY] = pos;
         const [bearingX, bearingY] = bearing;
-        const step = this.movementConfig.step
+        const step = this.movementConfig.step;
         const stepX = bearingX < 0 ? -step : step;
         const stepY = bearingY < 0 ? -step : step;
         return [posX + stepX, posY + stepY];

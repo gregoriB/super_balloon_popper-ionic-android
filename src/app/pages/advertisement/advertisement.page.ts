@@ -65,10 +65,14 @@ export class AdvertisementPage implements ViewWillEnter, ViewWillLeave {
 
     async removeListeners() {
         this.onLoad?.remove(),
-        this.onDismiss?.remove(),
-        this.onShow?.remove(),
-        this.onFail?.remove(),
-        this.onLoad = this.onDismiss = this.onShow = this.onFail = undefined;
+            this.onDismiss?.remove(),
+            this.onShow?.remove(),
+            this.onFail?.remove(),
+            (this.onLoad =
+                this.onDismiss =
+                this.onShow =
+                this.onFail =
+                    undefined);
     }
 
     async ionViewWillLeave() {

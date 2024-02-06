@@ -34,7 +34,7 @@ export class BalloonComponent implements AfterViewInit, OnChanges {
     contrast = this.getRandom(20, 100);
     brightness = this.getRandom(20, 100);
     rotation = signal(0);
-    direction = Math.random() > 0.5 ? .3 : -0.3;
+    direction = Math.random() > 0.5 ? 0.3 : -0.3;
     rotationLimit = this.getRandom(30, 5);
     interval: number = 0;
     style = computed(() => ({
@@ -51,17 +51,16 @@ export class BalloonComponent implements AfterViewInit, OnChanges {
         this.setRotation();
     }
 
-
     setRotation() {
         this.interval = window.setInterval(() => {
             if (this.direction < 0) {
                 if (this.rotation() < this.rotationLimit * -1) {
-                  this.direction *= -1;
+                    this.direction *= -1;
                 }
             } else if (this.direction > 0) {
-              if (this.rotation() > this.rotationLimit) {
-                  this.direction *= -1;
-              }
+                if (this.rotation() > this.rotationLimit) {
+                    this.direction *= -1;
+                }
             }
             this.rotation.update((r: number) => r + this.direction);
         }, 16);

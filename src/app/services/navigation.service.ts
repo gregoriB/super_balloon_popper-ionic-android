@@ -66,10 +66,10 @@ export class NavigationService {
 
     private bufferInterstitialAd(time = 0) {
         return new Promise((res) => {
-          setTimeout(() => {
-            this.adService.prepareInterstitial();
-            res(true);
-          }, time);
+            setTimeout(() => {
+                this.adService.prepareInterstitial();
+                res(true);
+            }, time);
         });
     }
 

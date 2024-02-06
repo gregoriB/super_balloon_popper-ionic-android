@@ -14,9 +14,9 @@ enum InteractableObject {
 
 const interactionSounds: { [key: string]: { [key: number]: string } } = {
     [InteractableObject.BALLOON]: {
-      0: '../../../assets/sounds/pop0.mp3',
-      1: '../../../assets/sounds/pop1.mp3',
-      2: '../../../assets/sounds/pop2.mp3',
+        0: '../../../assets/sounds/pop0.mp3',
+        1: '../../../assets/sounds/pop1.mp3',
+        2: '../../../assets/sounds/pop2.mp3',
     },
 };
 
@@ -44,15 +44,15 @@ function generateRandomBalloon(index: number): LevelObjectConfig {
     const [minSize, maxSize] = [0.7, 0.9];
     const [minStep, maxStep] = [0.4, 1.2];
     const size = Math.max(Math.random() * maxSize, minSize);
-    const diff = (maxSize - minSize);
+    const diff = maxSize - minSize;
     const indicator = diff / 4;
     let sizeGroup = 2;
-    if (size > minSize + (indicator / 2)) {
-      if (size < maxSize - (indicator / 2)) {
-        sizeGroup = 1
-      } else {
-        sizeGroup = 0;
-      }
+    if (size > minSize + indicator / 2) {
+        if (size < maxSize - indicator / 2) {
+            sizeGroup = 1;
+        } else {
+            sizeGroup = 0;
+        }
     }
 
     return {
@@ -158,20 +158,17 @@ export class PlayPage implements ViewDidLeave, ViewDidEnter {
         this.bgmSong = new Audio(bgmArr[this.bgmSongIndex()]);
         if (!navigator.userActivation.hasBeenActive) {
             this.bgmInterval = setInterval(() => {
-            if (navigator.userActivation.hasBeenActive) {
-              clearInterval(this.bgmInterval);
-              this.bgmSong.play();
-            }
-          }, 16);
+                if (navigator.userActivation.hasBeenActive) {
+                    clearInterval(this.bgmInterval);
+                    this.bgmSong.play();
+                }
+            }, 16);
         } else {
-          this.bgmSong.play();
+            this.bgmSong.play();
         }
-        this.bgmSong.addEventListener(
-            'ended',
-            () => {
-              this.incrementBgmSong();
-            }
-        );
+        this.bgmSong.addEventListener('ended', () => {
+            this.incrementBgmSong();
+        });
     }
 
     @HostListener('document:visibilitychange', [
