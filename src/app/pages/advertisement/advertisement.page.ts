@@ -29,13 +29,17 @@ export class AdvertisementPage implements ViewWillEnter, ViewWillLeave {
     onShow: PluginListenerHandle | undefined;
     onFail: PluginListenerHandle | undefined;
     onDismiss: PluginListenerHandle | undefined;
+    timeout: any;
 
     constructor() {
         effect(() => {
             // Using this as a workaround for weird
             // performance issues that come from
             // proceeding directly from the listeners
-            this.proceedToNextStep();
+            if (this.isReadyToProceed()) {
+                this.proceedToNextStep();
+                clearTimeout(this.timeout);
+            }
         });
     }
 
@@ -43,12 +47,10 @@ export class AdvertisementPage implements ViewWillEnter, ViewWillLeave {
         this.isReadyToProceed.set(false);
         this.isLoading.set(true);
         this.addListeners();
+        this.timeout = setTimeout(this.setReadyToProceed.bind(this), 7000);
     }
 
     addListeners() {
-        this.onLoad = this.adService.onLoadedInterstitial(() => {
-            this.adService.showInterstitial();
-        });
         this.onShow = this.adService.onShowInterstitial(() => {
             this.isLoading.set(false);
         });
@@ -62,12 +64,10 @@ export class AdvertisementPage implements ViewWillEnter, ViewWillLeave {
     }
 
     async removeListeners() {
-        Promise.all([
-            this.onLoad?.remove(),
-            this.onDismiss?.remove(),
-            this.onShow?.remove(),
-            this.onFail?.remove(),
-        ]);
+        this.onLoad?.remove(),
+        this.onDismiss?.remove(),
+        this.onShow?.remove(),
+        this.onFail?.remove(),
         this.onLoad = this.onDismiss = this.onShow = this.onFail = undefined;
     }
 
@@ -75,8 +75,7 @@ export class AdvertisementPage implements ViewWillEnter, ViewWillLeave {
         this.isReadyToProceed.set(false);
         this.isLoading.set(false);
         this.isDisabled.set(true);
-        await this.removeListeners();
-        this.adService.prepareInterstitial();
+        this.removeListeners();
     }
 
     setReadyToProceed() {
@@ -88,7 +87,6 @@ export class AdvertisementPage implements ViewWillEnter, ViewWillLeave {
     }
 
     proceedToNextStep() {
-        if (!this.isReadyToProceed()) return;
         this.navigation.proceedToNextStep();
     }
 }

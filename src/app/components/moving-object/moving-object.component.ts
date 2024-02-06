@@ -37,7 +37,7 @@ export class MovingObjectComponent
     @Input({ required: true }) movementConfig!: MovementConfig;
     @Input({ required: true }) objectConfig!: AttrConfig;
     @Input({ required: true }) currentTouch!: [number, number];
-    @Output() interactionEvent = new EventEmitter();
+    @Output() interactionEvent = new EventEmitter<ObjectUpdate>();
 
     objPos = signal<[number, number]>([0, 0]);
     objBearing = signal<[number, number]>([this.flipCoin(), this.flipCoin()]);
@@ -143,7 +143,7 @@ export class MovingObjectComponent
     generateUpdatedPos(pos: number[], bearing: number[]): [number, number] {
         const [posX, posY] = pos;
         const [bearingX, bearingY] = bearing;
-        const step = this.movementConfig.step;
+        const step = this.movementConfig.step
         const stepX = bearingX < 0 ? -step : step;
         const stepY = bearingY < 0 ? -step : step;
         return [posX + stepX, posY + stepY];
@@ -170,7 +170,7 @@ export class MovingObjectComponent
     ngOnInit(): void {
         const startPos = this.movementConfig.startPos || this.randomPos;
         this.objPos = signal(startPos);
-        this.movementInterval = window.setInterval(() => this.moveObject(), 1);
+        this.movementInterval = window.setInterval(() => this.moveObject(), 16);
     }
 
     ngOnDestroy(): void {
@@ -194,6 +194,7 @@ export class MovingObjectComponent
             size: this.movementConfig.size,
             name: this.objectConfig.name,
             index: this.movementConfig.index,
+            sizeGroup: this.objectConfig.sizeGroup,
         });
     }
 }

@@ -6,6 +6,11 @@ export const environment = {
     production: false,
 };
 
+export const adIdFirst = 'ca-app-pub-3940256099942544/1033173712';
+export const adIdSecond = 'ca-app-pub-3940256099942544/1033173712';
+
+export const adTimeout = 100000;
+
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

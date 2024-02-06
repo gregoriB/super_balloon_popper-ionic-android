@@ -10,6 +10,7 @@ declare interface AttrConfig {
     id: string;
     isActive: boolean;
     basePoints: number;
+    sizeGroup: number;
 }
 
 declare interface Bounds {
@@ -26,6 +27,7 @@ declare interface ObjectUpdate {
     id: AttrConfig['id'];
     basePoints: AttrConfig['basePoints'];
     size: MovementConfig['size'];
+    sizeGroup: number;
     name: string;
     index: number;
 }

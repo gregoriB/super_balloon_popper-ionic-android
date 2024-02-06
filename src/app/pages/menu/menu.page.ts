@@ -54,14 +54,14 @@ export class MenuPage implements ViewDidLeave, ViewDidEnter {
     }
 
     playInflateAudio() {
-        const inflateSound = new Audio('../../../assets/sounds/inflate.flac');
+        const inflateSound = new Audio('../../../assets/sounds/inflate.mp3');
         inflateSound.play();
         inflateSound.playbackRate = 3;
         setTimeout(this.playPopAudio, 800);
     }
 
     playPopAudio() {
-        const popSound = new Audio('../../../assets/sounds/pop.flac');
+        const popSound = new Audio('../../../assets/sounds/pop2.flac');
         popSound.play();
     }
 }

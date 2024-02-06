@@ -1,35 +1,28 @@
-import { Injectable, computed, effect, signal } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core';
 import {
-    AdMob,
-    AdmobConsentStatus,
-    InterstitialAdPluginEvents,
-} from '@capacitor-community/admob';
+    AdMob, AdmobConsentStatus, InterstitialAdPluginEvents, } from '@capacitor-community/admob';
 import { PluginListenerHandle } from '@capacitor/core';
-enum PluginEvent {
-    LOADED = InterstitialAdPluginEvents.Loaded,
-    DISMISSED = InterstitialAdPluginEvents.Dismissed,
-}
-type adListener = undefined | PluginListenerHandle;
-type adListeners = { [key: string]: adListener };
+import { adIdFirst, adIdSecond, adTimeout, environment } from 'src/environments/environment';
 
-// const beforePlay = 'ca-app-pub-3940256099942544/1033173712';
-// const afterPlay = 'ca-app-pub-3940256099942544/1033173712';
-const beforePlay = 'ca-app-pub-4865009216016262/1853853129';
-const afterPlay = 'ca-app-pub-4865009216016262/9592456930';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AdService {
-    private interstitialAdIds = [beforePlay, afterPlay];
+    private interstitialAdIds = [adIdFirst, adIdSecond];
     private interstitialAdCount = signal(0);
     private currentInterstitialAdId = computed(() => {
         const i = this.interstitialAdCount() > 1 ? 1 : 0;
         return this.interstitialAdIds[i];
     });
 
+    get adMob() {
+        return AdMob;
+    }
+
     async initializeAndPrepare() {
-        this.initialize().then(() => this.prepareInterstitial());
+        await this.initialize();
+        this.prepareInterstitial();
     }
 
     async initialize() {
@@ -38,6 +31,8 @@ export class AdService {
             tagForUnderAgeOfConsent: true,
             initializeForTesting: true,
             testingDevices: ['8f9fbef3-0ad5-4497-ba75-2863e7b51805'],
+            // initializeForTesting: true,
+            // testingDevices: ['8f9fbef3-0ad5-4497-ba75-2863e7b51805'],
         });
         // return new Promise(async (res, rej) => {
         //   await AdMob.initialize({
@@ -84,31 +79,31 @@ export class AdService {
         // });
     }
 
+
     async prepareInterstitial() {
         this.interstitialAdCount.update((ic) => ic++);
-        return AdMob.prepareInterstitial({
+        await AdMob.prepareInterstitial({
             isTesting: true,
             adId: this.currentInterstitialAdId(),
         });
     }
 
     showInterstitial() {
-        AdMob.showInterstitial();
+      return new Promise((res) => {
+        let timeout: any;
+        let onLoad = this.onLoadedInterstitial(() => {
+            AdMob.showInterstitial();
+            onLoad.remove();
+            clearTimeout(timeout);
+            res(true)
+        });
+        setTimeout(() => {
+          onLoad.remove();
+          res(false);
+        }, adTimeout);
+      })
     }
 
-    get defaultListeners(): adListeners {
-        return {
-            dismissed: undefined,
-            loaded: undefined,
-            failedToLoad: undefined,
-            failedToShow: undefined,
-            showed: undefined,
-        };
-    }
-
-    get adMob() {
-        return AdMob;
-    }
 
     onShowInterstitial(callback: () => void) {
         return AdMob.addListener(InterstitialAdPluginEvents.Showed, callback);

@@ -4,6 +4,7 @@ import { StorageService } from './storage.service';
 import { App } from '@capacitor/app';
 import { Platform } from '@ionic/angular';
 import { PlatformLocation } from '@angular/common';
+import { AdService } from './ad.service';
 
 /**
  * Service maintains complete control over app navigation,
@@ -19,6 +20,7 @@ export class NavigationService {
         private platform: Platform,
         private location: PlatformLocation,
         private storageService: StorageService,
+        private adService: AdService,
     ) {
         setTimeout(this.initialize.bind(this));
     }
@@ -39,6 +41,7 @@ export class NavigationService {
     }
 
     private proceedFrom(page: Pages) {
+        this.bufferInterstitialAd();
         switch (page) {
             case Pages.ACCESSIBILITY_PAGE:
                 this.proceedFromAccessibilityPage();
@@ -61,6 +64,15 @@ export class NavigationService {
         this.history.push(this.currentPage);
     }
 
+    private bufferInterstitialAd(time = 0) {
+        return new Promise((res) => {
+          setTimeout(() => {
+            this.adService.prepareInterstitial();
+            res(true);
+          }, time);
+        });
+    }
+
     private subscribeToBackButton() {
         this.platform.backButton.subscribeWithPriority(10, (next) => {
             if (this.isCurrentPage(Pages.ACCESSIBILITY_PAGE)) {
@@ -78,13 +90,14 @@ export class NavigationService {
         this.hasVisited = val;
     }
 
-    private proceedFromAccessibilityPage(): Pages {
-        let newPage = Pages.ADVERTISEMENT_PAGE;
+    private async proceedFromAccessibilityPage(): Promise<Pages> {
         if (!this.hasVisited || this.isWeb) {
-            newPage = Pages.MENU_PAGE;
             this.setHasVisited(true);
+            return this.navigateByUrl(Pages.MENU_PAGE);
         }
-        return this.navigateByUrl(newPage);
+        const showAd = await this.adService.showInterstitial();
+        const page = showAd ? Pages.ADVERTISEMENT_PAGE : Pages.MENU_PAGE;
+        return this.navigateByUrl(page);
     }
 
     private proceedFromAdvertisementPage(): Pages {
@@ -100,7 +113,8 @@ export class NavigationService {
         return this.navigateByUrl(Pages.PLAY_PAGE);
     }
 
-    private proceedFromPlayPage(): Pages {
+    private async proceedFromPlayPage(): Promise<Pages> {
+        this.adService.showInterstitial();
         return this.navigateByUrl(Pages.ADVERTISEMENT_PAGE);
     }
 

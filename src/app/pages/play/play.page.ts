@@ -1,20 +1,23 @@
 import {
-    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     HostListener,
     effect,
     signal,
 } from '@angular/core';
-import { ViewDidLeave } from '@ionic/angular';
+import { ViewDidEnter, ViewDidLeave } from '@ionic/angular';
 import { MovingObjectComponent } from 'src/app/components/moving-object/moving-object.component';
 
 enum InteractableObject {
     BALLOON = 'balloon',
 }
 
-const interactionSounds: { [key: string]: string } = {
-    [InteractableObject.BALLOON]: '../../../assets/sounds/pop.flac',
+const interactionSounds: { [key: string]: { [key: number]: string } } = {
+    [InteractableObject.BALLOON]: {
+      0: '../../../assets/sounds/pop0.mp3',
+      1: '../../../assets/sounds/pop1.mp3',
+      2: '../../../assets/sounds/pop2.mp3',
+    },
 };
 
 enum Bgm {
@@ -39,8 +42,18 @@ const startingBgmSongIndex = Math.floor(Math.random() * bgmArr.length);
 
 function generateRandomBalloon(index: number): LevelObjectConfig {
     const [minSize, maxSize] = [0.7, 0.9];
-    const [minStep, maxStep] = [0.15, 0.4];
+    const [minStep, maxStep] = [0.4, 1.2];
     const size = Math.max(Math.random() * maxSize, minSize);
+    const diff = (maxSize - minSize);
+    const indicator = diff / 4;
+    let sizeGroup = 2;
+    if (size > minSize + (indicator / 2)) {
+      if (size < maxSize - (indicator / 2)) {
+        sizeGroup = 1
+      } else {
+        sizeGroup = 0;
+      }
+    }
 
     return {
         attrs: {
@@ -48,6 +61,7 @@ function generateRandomBalloon(index: number): LevelObjectConfig {
             name: InteractableObject.BALLOON,
             isActive: true,
             basePoints: 10,
+            sizeGroup,
         },
         movement: {
             index,
@@ -74,11 +88,12 @@ const numBalloons = 2;
     imports: [MovingObjectComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PlayPage implements ViewDidLeave, AfterViewInit {
+export class PlayPage implements ViewDidLeave, ViewDidEnter {
     levelObjects = signal<LevelObjectConfig[]>(generateNewItems(numBalloons));
     score = signal<number>(0);
     currentTouch = signal<[number, number]>([0, 0]);
     bgmSongIndex = signal<number>(-1);
+    bgmInterval!: any;
     bounds = signal<Bounds>(this.windowBounds);
     computed = signal<number>(3);
     isThrottled = signal(false);
@@ -115,7 +130,7 @@ export class PlayPage implements ViewDidLeave, AfterViewInit {
         return levelObjects.every((lo) => !lo.attrs.isActive);
     }
 
-    ngAfterViewInit() {
+    ionViewDidEnter() {
         if (this.bgmSongIndex() !== -1) return;
         this.bgmSongIndex.set(startingBgmSongIndex);
     }
@@ -126,6 +141,7 @@ export class PlayPage implements ViewDidLeave, AfterViewInit {
             'ended',
             this.incrementBgmSong.bind(this),
         );
+        this.bgmSongIndex.set(-1);
     }
 
     touchPage(event: TouchEvent) {
@@ -138,11 +154,23 @@ export class PlayPage implements ViewDidLeave, AfterViewInit {
     }
 
     playBgmAudio() {
+        clearInterval(this.bgmInterval);
         this.bgmSong = new Audio(bgmArr[this.bgmSongIndex()]);
-        this.bgmSong.play();
+        if (!navigator.userActivation.hasBeenActive) {
+            this.bgmInterval = setInterval(() => {
+            if (navigator.userActivation.hasBeenActive) {
+              clearInterval(this.bgmInterval);
+              this.bgmSong.play();
+            }
+          }, 16);
+        } else {
+          this.bgmSong.play();
+        }
         this.bgmSong.addEventListener(
             'ended',
-            this.incrementBgmSong.bind(this),
+            () => {
+              this.incrementBgmSong();
+            }
         );
     }
 
@@ -158,16 +186,16 @@ export class PlayPage implements ViewDidLeave, AfterViewInit {
         }
     }
 
-    playInteractionAudio(soundName: string) {
+    playInteractionAudio(soundName: string, size: number) {
         if (this.interactionSound?.duration > 0) {
             this.interactionSound.pause();
         }
-        this.interactionSound = new Audio(interactionSounds[soundName]);
+        this.interactionSound = new Audio(interactionSounds[soundName][size]);
         this.interactionSound.play();
     }
 
     playInflateAudio() {
-        const inflateSound = new Audio('../../../assets/sounds/inflate.flac');
+        const inflateSound = new Audio('../../../assets/sounds/inflate.mp3');
         inflateSound.play();
         inflateSound.playbackRate = 4;
     }
@@ -185,7 +213,7 @@ export class PlayPage implements ViewDidLeave, AfterViewInit {
         window.setTimeout(() => {
             this.isThrottled.set(true);
             window.setTimeout(() => this.isThrottled.set(false), 200);
-        }, 10);
+        }, 5);
     }
 
     updateObjects() {
@@ -198,7 +226,7 @@ export class PlayPage implements ViewDidLeave, AfterViewInit {
         } else {
             this.levelObjects.set(updatedObjects);
         }
-        this.playInteractionAudio(objConfig.name);
+        this.playInteractionAudio(objConfig.name, objConfig.sizeGroup);
         this.updateScore(objConfig);
         this.batchedInteractions = [];
     }
