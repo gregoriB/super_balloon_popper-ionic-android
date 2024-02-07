@@ -1,5 +1,5 @@
 {
-    "name": "Balloon Popper!",
+    "name": "Super Balloon Popper!",
     "version": "0.0.1",
     "author": "Ionic Framework",
     "homepage": "https://ionicframework.com/",
@@ -8,8 +8,8 @@
         "start:ng": "ng serve",
         "ionic:build:dev": "npx ionic build --configuration=development",
         "ionic:build:prod": "npx ionic build --configuration=production",
-        "start:android": "npx ionic capacitor run android -l --external --no-build",
-        "start:sync": "npx ionic cap sync && npm run start:android",
+        "start:android": "npx ionic capacitor run android --no-build",
+        "start:android:live": "npx ionic capacitor run android -l --external",
         "build": "ng build --prod",
         "watch": "ng build --watch --configuration development",
         "test": "ng test",

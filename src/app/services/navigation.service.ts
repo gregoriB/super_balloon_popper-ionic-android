@@ -41,7 +41,6 @@ export class NavigationService {
     }
 
     private proceedFrom(page: Pages) {
-        this.bufferInterstitialAd();
         switch (page) {
             case Pages.ACCESSIBILITY_PAGE:
                 this.proceedFromAccessibilityPage();
@@ -50,9 +49,11 @@ export class NavigationService {
                 this.proceedFromAdvertisementPage();
                 break;
             case Pages.MENU_PAGE:
+                this.bufferInterstitialAd(5000);
                 this.proceedFromMenuPage();
                 break;
             case Pages.PLAY_PAGE:
+                this.bufferInterstitialAd();
                 this.proceedFromPlayPage();
                 break;
             case Pages.APP_PAGE:

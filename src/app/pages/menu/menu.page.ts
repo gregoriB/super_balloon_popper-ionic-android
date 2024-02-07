@@ -61,7 +61,7 @@ export class MenuPage implements ViewDidLeave, ViewDidEnter {
     }
 
     playPopAudio() {
-        const popSound = new Audio('../../../assets/sounds/pop2.flac');
+        const popSound = new Audio('../../../assets/sounds/pop2.mp3');
         popSound.play();
     }
 }

@@ -5,12 +5,7 @@ import {
     InterstitialAdPluginEvents,
 } from '@capacitor-community/admob';
 import { PluginListenerHandle } from '@capacitor/core';
-import {
-    adIdFirst,
-    adIdSecond,
-    adTimeout,
-    environment,
-} from 'src/environments/environment';
+import { adIdFirst, adIdSecond, adTimeout } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root',
@@ -33,57 +28,46 @@ export class AdService {
     }
 
     async initialize() {
-        return AdMob.initialize({
+        return new Promise(async (res) => {
+          await AdMob.initialize({
             tagForChildDirectedTreatment: true,
             tagForUnderAgeOfConsent: true,
             initializeForTesting: true,
             testingDevices: ['8f9fbef3-0ad5-4497-ba75-2863e7b51805'],
-            // initializeForTesting: true,
-            // testingDevices: ['8f9fbef3-0ad5-4497-ba75-2863e7b51805'],
+          });
+
+          res(true);
+
+          const [trackingInfo, consentInfo] = await Promise.all([
+              AdMob.trackingAuthorizationStatus(),
+              AdMob.requestConsentInfo(),
+          ]);
+
+          if (trackingInfo.status === 'notDetermined') {
+          /**
+            * If you want to explain TrackingAuthorization before showing the iOS dialog,
+            * you can show the modal here.
+            * ex)
+            * const modal = await this.modalCtrl.create({
+            *   component: RequestTrackingPage,
+            * });
+            * await modal.present();
+            * await modal.onDidDismiss();  // Wait for close modal
+            **/
+
+            await AdMob.requestTrackingAuthorization();
+          }
+
+          const authorizationStatus = await AdMob.trackingAuthorizationStatus();
+
+          if (
+                  authorizationStatus.status === 'authorized' &&
+                  consentInfo.isConsentFormAvailable &&
+                  consentInfo.status === AdmobConsentStatus.REQUIRED
+          ) {
+            await AdMob.showConsentForm();
+          }
         });
-        // return new Promise(async (res, rej) => {
-        //   await AdMob.initialize({
-        //     tagForChildDirectedTreatment: true,
-        //     tagForUnderAgeOfConsent: true,
-        //     initializeForTesting: true,
-        //     testingDevices: ['8f9fbef3-0ad5-4497-ba75-2863e7b51805'],
-        //   });
-        //   // return res(true);
-        //
-        //   setTimeout(() => {
-        //     res(true);
-        //   }, 1000);
-        //
-        //   const [trackingInfo, consentInfo] = await Promise.all([
-        //       AdMob.trackingAuthorizationStatus(),
-        //       AdMob.requestConsentInfo(),
-        //   ]);
-        //
-        //   if (trackingInfo.status === 'notDetermined') {
-        //       /**
-        //       * If you want to explain TrackingAuthorization before showing the iOS dialog,
-        //       * you can show the modal here.
-        //       * ex)
-        //       * const modal = await this.modalCtrl.create({
-        //       *   component: RequestTrackingPage,
-        //       * });
-        //       * await modal.present();
-        //       * await modal.onDidDismiss();  // Wait for close modal
-        //       **/
-        //
-        //       await AdMob.requestTrackingAuthorization();
-        //   }
-        //
-        //   const authorizationStatus = await AdMob.trackingAuthorizationStatus();
-        //   if (
-        //       authorizationStatus.status === 'authorized' &&
-        //       consentInfo.isConsentFormAvailable &&
-        //       consentInfo.status === AdmobConsentStatus.REQUIRED
-        //   ) {
-        //       await AdMob.showConsentForm();
-        //   }
-        //   return res(true);
-        // });
     }
 
     async prepareInterstitial() {

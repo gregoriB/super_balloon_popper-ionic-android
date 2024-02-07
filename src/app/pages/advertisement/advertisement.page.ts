@@ -10,6 +10,7 @@ import { PluginListenerHandle } from '@capacitor/core';
 import { ViewWillEnter, ViewWillLeave } from '@ionic/angular';
 import { AdService } from 'src/app/services/ad.service';
 import { NavigationService } from 'src/app/services/navigation.service';
+import { adTimeout } from 'src/environments/environment';
 
 @Component({
     selector: 'app-advertisement',
@@ -38,7 +39,6 @@ export class AdvertisementPage implements ViewWillEnter, ViewWillLeave {
             // proceeding directly from the listeners
             if (this.isReadyToProceed()) {
                 this.proceedToNextStep();
-                clearTimeout(this.timeout);
             }
         });
     }
@@ -47,32 +47,38 @@ export class AdvertisementPage implements ViewWillEnter, ViewWillLeave {
         this.isReadyToProceed.set(false);
         this.isLoading.set(true);
         this.addListeners();
-        this.timeout = setTimeout(this.setReadyToProceed.bind(this), 7000);
+        this.timeout = setTimeout(() => {
+            this.setReadyToProceed();
+            clearTimeout(this.timeout);
+        }, adTimeout);
     }
 
     addListeners() {
         this.onShow = this.adService.onShowInterstitial(() => {
+            clearTimeout(this.timeout);
             this.isLoading.set(false);
         });
         this.onFail = this.adService.onFailInterstitial(() => {
-            this.isLoading.set(false);
-            this.setReadyToProceed();
+            clearTimeout(this.timeout);
+            setTimeout(() => {
+              this.isLoading.set(false);
+              this.setReadyToProceed();
+            }, 500);
         });
         this.onDismiss = this.adService.onDismissedInterstitial(() => {
-            this.setReadyToProceed();
+            setTimeout(() => {
+              clearTimeout(this.timeout);
+              this.setReadyToProceed();
+            }, 500);
         });
     }
 
     async removeListeners() {
-        this.onLoad?.remove(),
-            this.onDismiss?.remove(),
-            this.onShow?.remove(),
-            this.onFail?.remove(),
-            (this.onLoad =
-                this.onDismiss =
-                this.onShow =
-                this.onFail =
-                    undefined);
+        this.onLoad?.remove();
+        this.onDismiss?.remove();
+        this.onShow?.remove();
+        this.onFail?.remove();
+        this.onLoad = this.onDismiss = this.onShow = this.onFail = undefined;
     }
 
     async ionViewWillLeave() {
