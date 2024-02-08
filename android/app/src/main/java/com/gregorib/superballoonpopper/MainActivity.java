@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.gregorib.superballoonpopper;
 
 import com.getcapacitor.BridgeActivity;
 

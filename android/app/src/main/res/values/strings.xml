@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Super Balloon Popper!</string>
     <string name="title_activity_main">Super Balloon Popper!</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="package_name">com.gregorib.superballoonpopper</string>
+    <string name="custom_url_scheme">com.gregorib.superballoonpopper</string>
     <string name="admob_app_id">ca-app-pub-4865009216016262~3358506481</string>
 </resources>
