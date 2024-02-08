@@ -17,7 +17,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 0 0.5rem;
-    height: 8vh;
+    height: 8vmax;
 }
 
 .next-step-container button {
@@ -141,8 +141,6 @@ $color: rgba(255, 255, 255, 0.7);
     .img-container {
         height: 100%;
         width: 100%;
-        // flex-grow: 2;
-        // height: 100%;
         background-image: url("../../../assets/images/interaction_control_landscape.jpg");
         background-position: top;
         background-repeat: no-repeat;
@@ -158,8 +156,8 @@ $color: rgba(255, 255, 255, 0.7);
 
 .continue-button .button-spinner .container {
     opacity: 0.7;
-    width: 10vw;
-    height: 10vw;
+    width: 8vmin;
+    height: 8vmin;
     animation: spin 1000ms linear infinite;
 }
 

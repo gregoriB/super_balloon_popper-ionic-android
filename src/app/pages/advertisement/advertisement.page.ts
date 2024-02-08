@@ -61,14 +61,14 @@ export class AdvertisementPage implements ViewWillEnter, ViewWillLeave {
         this.onFail = this.adService.onFailInterstitial(() => {
             clearTimeout(this.timeout);
             setTimeout(() => {
-              this.isLoading.set(false);
-              this.setReadyToProceed();
+                this.isLoading.set(false);
+                this.setReadyToProceed();
             }, 500);
         });
         this.onDismiss = this.adService.onDismissedInterstitial(() => {
             setTimeout(() => {
-              clearTimeout(this.timeout);
-              this.setReadyToProceed();
+                clearTimeout(this.timeout);
+                this.setReadyToProceed();
             }, 500);
         });
     }
@@ -82,6 +82,7 @@ export class AdvertisementPage implements ViewWillEnter, ViewWillLeave {
     }
 
     async ionViewWillLeave() {
+        clearTimeout(this.timeout);
         this.isReadyToProceed.set(false);
         this.isLoading.set(false);
         this.isDisabled.set(true);
