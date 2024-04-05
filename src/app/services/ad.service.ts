@@ -5,7 +5,12 @@ import {
     InterstitialAdPluginEvents,
 } from '@capacitor-community/admob';
 import { PluginListenerHandle } from '@capacitor/core';
-import { adIdFirst, adIdSecond, adTimeout } from 'src/environments/environment';
+import {
+    adIdFirst,
+    adIdSecond,
+    adTimeout,
+    testingDevices,
+} from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root',
@@ -33,7 +38,7 @@ export class AdService {
                 tagForChildDirectedTreatment: true,
                 tagForUnderAgeOfConsent: true,
                 initializeForTesting: true,
-                testingDevices: ['8f9fbef3-0ad5-4497-ba75-2863e7b51805'],
+                testingDevices,
             });
 
             res(true);

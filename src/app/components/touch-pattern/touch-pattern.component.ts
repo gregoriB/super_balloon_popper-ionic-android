@@ -18,11 +18,11 @@ export class TouchPatternComponent {
 
     get countTexts() {
         if (this.count === this.maxCount - 1) {
-            return ['Click the back button', 'times to exit'];
+            return ['Click the back button or swipe back', 'times to exit'];
         }
         if (this.count === 1) {
-            return ['Click the back button', 'more time to exit'];
+            return ['Click the back button or swipe back', 'more time to exit'];
         }
-        return ['Click the back button', 'more times to exit'];
+        return ['Click the back button or swipe back', 'more times to exit'];
     }
 }
