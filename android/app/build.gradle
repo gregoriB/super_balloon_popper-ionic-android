@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.gregorib.superballoonpopper"
+    namespace "com.gregoritech.superballoonpopper"
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.gregorib.superballoonpopper"
+        applicationId "com.gregoritech.superballoonpopper"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

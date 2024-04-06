@@ -1,4 +1,4 @@
-package com.gregorib.superballoonpopper;
+package com.gregoritech.superballoonpopper;
 
 import com.getcapacitor.BridgeActivity;
 
