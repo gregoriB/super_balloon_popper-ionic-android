@@ -6,6 +6,7 @@
     "scripts": {
         "ng": "ng",
         "start:ng": "ng serve",
+        "ionic:capacitor:sync": "npx ionic capacitor sync",
         "ionic:build:dev": "npx ionic build --configuration=development",
         "ionic:build:prod": "npx ionic build --configuration=production",
         "start:android": "npx ionic capacitor run android --no-build",
